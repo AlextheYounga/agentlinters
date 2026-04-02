@@ -23,11 +23,13 @@ Prettier handles formatting for JS, TS, Vue, React (JSX/TSX), HTML, Markdown, YA
 
 Oxfmt is a fast formatter alternative with close coverage of the repo's Prettier defaults, native Tailwind class sorting, and optional import sorting.
 
+The Oxfmt config also carries over the repo's ignore behavior, so it is intended to be used from the `oxfmt/.oxfmtrc.json` path shown above rather than flattened into the project root.
+
 Oxlint is a fast JS/TS lint alternative with strong coverage of the repo's correctness, dead-code, and complexity rules. It is intentionally documented as a partial alternative rather than a drop-in ESLint replacement: JS/TS coverage is strong, but Vue-specific parity is still limited.
 
 ## Usage
 
-Copy the relevant config files into your project root (or symlink them). Each config is self-contained — just install the corresponding linter/tool and you're good to go.
+Copy the relevant config directories into your project using the paths shown above, or symlink them from this repo. Each config is self-contained when used at the documented path.
 
 ### OXC usage
 

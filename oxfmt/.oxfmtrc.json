@@ -1,4 +1,5 @@
 {
+    "$schema": "../node_modules/oxfmt/configuration_schema.json",
     "semi": true,
     "singleQuote": true,
     "singleAttributePerLine": false,
@@ -9,19 +10,47 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "endOfLine": "lf",
+    "ignorePatterns": [
+        "../node_modules",
+        "../dist",
+        "../build",
+        "../vendor",
+        "../target",
+        "../public",
+        "../.git",
+        "../.vscode",
+        "../*cache*",
+        "../pnpm-lock.yaml",
+        "../package-lock.json",
+        "../yarn.lock",
+        "../composer.lock",
+        "../Cargo.lock",
+        "../.env",
+        "../.env*",
+        "../*.sqlite",
+        "../*.db",
+        "../*.wasm",
+        "../*.min.js",
+        "../*.min.css",
+        "../*.rs",
+        "../*.py",
+        "../*.rb",
+        "../*.php",
+        "../src-tauri",
+        "../bootstrap/ssr",
+        "../Dockerfile"
+    ],
     "sortPackageJson": false,
     "sortImports": {
         "groups": [
-            "builtin",
-            "external",
-            ["internal", "subpath"],
-            ["parent", "sibling", "index"],
-            "style",
+            "type-import",
+            ["value-builtin", "value-external"],
+            "type-internal",
+            "value-internal",
+            ["type-parent", "type-sibling", "type-index"],
+            ["value-parent", "value-sibling", "value-index"],
             "unknown"
-        ],
-        "order": "asc",
-        "ignoreCase": true,
-        "newlinesBetween": true
+        ]
     },
     "sortTailwindcss": {
         "functions": ["clsx", "cn", "cva"]

@@ -1,4 +1,5 @@
 {
+    "$schema": "../node_modules/oxlint/configuration_schema.json",
     "categories": {
         "correctness": "off",
         "suspicious": "off",
@@ -13,7 +14,7 @@
         "browser": true,
         "node": true
     },
-    "ignorePatterns": ["vendor", "node_modules", "dist", "build", "coverage", "*.min.js"],
+    "ignorePatterns": ["../vendor", "../node_modules", "../dist", "../build", "../coverage", "../*.min.js"],
     "rules": {
         "eqeqeq": ["error", "always"],
         "no-var": "error",
