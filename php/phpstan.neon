@@ -1,0 +1,109 @@
+parameters:
+    level: 8
+    paths:
+        - app
+        - src
+    excludePaths:
+        - vendor
+        - node_modules
+        - storage
+        - bootstrap/cache
+
+    # ── Type safety ──────────────────────────────────────────────────
+    # Matches: TS no-floating-promises, no-unsafe-*, Rust correctness=deny
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: false
+    reportUnmatchedIgnoredErrors: true
+
+    # ── Cognitive complexity ─────────────────────────────────────────
+    # Matches: Python C90 max-complexity=8, Rust cognitive_complexity, JS complexity
+    # Requires: tomasvotruba/cognitive-complexity
+    cognitiveComplexity:
+        maxClassCognitiveComplexity: 30
+        maxFunctionCognitiveComplexity: 8
+
+    # ── Function / method size ───────────────────────────────────────
+    # Matches: JS max-lines-per-function=60, Rust too-many-lines-threshold=60, Python max-statements=40
+    # Requires: tomasvotruba/lines
+    lines:
+        maxMethodLines: 60
+        maxClassLines: 300
+
+    # ── Type coverage ────────────────────────────────────────────────
+    # Matches: TS strict type checking, Rust missing_*_doc=deny, Python D (docstrings)
+    # Requires: tomasvotruba/type-coverage
+    type_coverage:
+        return_type: 100
+        param_type: 100
+        property_type: 100
+
+    # ── Debug leftovers ──────────────────────────────────────────────
+    # Matches: Rust dbg_macro=deny/todo=deny, Python T20 (print detection)
+    # Requires: spaze/phpstan-disallowed-calls
+    disallowedFunctionCalls:
+        -
+            function: 'dd()'
+            message: 'debug function left in code'
+        -
+            function: 'dump()'
+            message: 'debug function left in code'
+        -
+            function: 'var_dump()'
+            message: 'debug function left in code'
+        -
+            function: 'print_r()'
+            message: 'debug function left in code'
+        -
+            function: 'ray()'
+            message: 'debug function left in code'
+        -
+            function: 'var_export()'
+            message: 'debug function left in code'
+        -
+            function: 'debug_backtrace()'
+            message: 'debug function left in code'
+        -
+            function: 'debug_print_backtrace()'
+            message: 'debug function left in code'
+
+    disallowedStaticCalls:
+        -
+            method: 'Symfony\Component\VarDumper\VarDumper::dump()'
+            message: 'debug function left in code'
+
+    # ── Ignored paths for tests ──────────────────────────────────────
+    # Matches: Python per-file-ignores for tests, Ruby RSpec exclusions
+    ignoreErrors:
+        -
+            identifier: 'disallowedFunction'
+            paths:
+                - tests/*
+        -
+            identifier: 'lines.tooLongMethod'
+            paths:
+                - tests/*
+        -
+            identifier: 'cognitive_complexity.method'
+            paths:
+                - tests/*
+
+includes:
+    # Strict rules: no dynamic properties, no variable variables, boolean conditions
+    # Matches: Python BLE (blind except), TS strict checks, Rust suspicious=deny
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+    # Cognitive complexity analysis
+    - vendor/tomasvotruba/cognitive-complexity/config/extension.neon
+
+    # Method / class length limits
+    - vendor/tomasvotruba/lines/config/extension.neon
+
+    # Type coverage enforcement
+    - vendor/tomasvotruba/type-coverage/config/extension.neon
+
+    # Debug function banning
+    - vendor/spaze/phpstan-disallowed-calls/extension.neon
+
+    # Deprecated API detection
+    # Matches: Python UP (pyupgrade), Rust pedantic
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon

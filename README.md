@@ -12,7 +12,7 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | Python | Ruff | `python/ruff.toml` |
 | Ruby | RuboCop | `ruby/rubocop.yml` |
 | Rust | Clippy | `rust/clippy.toml`, `rust/Cargo.toml` |
-| PHP | Pint | `php/pint.json` |
+| PHP | Pint + PHPStan | `php/pint.json`, `php/phpstan.neon` |
 | Shell | ShellCheck | `shell/.shellcheckrc` |
 
 ## Usage
