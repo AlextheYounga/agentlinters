@@ -4,16 +4,19 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 
 ## Configs
 
-| Language | Tool | Config |
-|----------|------|--------|
-| JavaScript | ESLint + Prettier | `javascript/js/eslint.config.js`, `javascript/.prettierrc` |
-| TypeScript | ESLint + Prettier | `javascript/typescript/eslint.config.js` |
-| Vue | ESLint + Prettier | `javascript/vue/eslint.config.js` |
-| Python | Ruff | `python/ruff.toml` |
-| Ruby | RuboCop | `ruby/rubocop.yml` |
-| Rust | Clippy | `rust/clippy.toml`, `rust/Cargo.toml` |
-| PHP | Pint + PHPStan | `php/pint.json`, `php/phpstan.neon` |
-| Shell | ShellCheck | `shell/.shellcheckrc` |
+| Language / Tool | Type | Config |
+|-----------------|------|--------|
+| **Prettier** | Formatter | `prettier/.prettierrc`, `prettier/.prettierignore` |
+| JavaScript | Linter | `javascript/js/eslint.config.js` |
+| TypeScript | Linter | `javascript/typescript/eslint.config.js` |
+| Vue | Linter | `javascript/vue/eslint.config.js` |
+| Python | Linter + Formatter | `python/ruff.toml` |
+| Ruby | Linter | `ruby/rubocop.yml` |
+| Rust | Linter | `rust/clippy.toml`, `rust/Cargo.toml` |
+| PHP | Formatter + Analyzer | `php/pint.json`, `php/phpstan.neon` |
+| Shell | Linter | `shell/.shellcheckrc` |
+
+Prettier handles formatting for JS, TS, Vue, React (JSX/TSX), HTML, Markdown, YAML, GraphQL, JSON, and CSS with per-filetype overrides.
 
 ## Usage
 
