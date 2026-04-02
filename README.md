@@ -7,9 +7,12 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | Language / Tool | Type | Config |
 |-----------------|------|--------|
 | **Prettier** | Formatter | `prettier/.prettierrc`, `prettier/.prettierignore` |
+| **Oxfmt** | Formatter | `oxfmt/.oxfmtrc.json` |
 | JavaScript | Linter | `javascript/js/eslint.config.js` |
 | TypeScript | Linter | `javascript/typescript/eslint.config.js` |
 | Vue | Linter | `javascript/vue/eslint.config.js` |
+| **Oxlint** | Linter | `oxlint/oxlintrc.json` |
+| **Oxlint (TypeScript)** | Linter | `oxlint/typescript/oxlintrc.json` |
 | Python | Linter + Formatter | `python/ruff.toml` |
 | Ruby | Linter | `ruby/rubocop.yml` |
 | Rust | Linter | `rust/clippy.toml`, `rust/Cargo.toml` |
@@ -18,9 +21,22 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 
 Prettier handles formatting for JS, TS, Vue, React (JSX/TSX), HTML, Markdown, YAML, GraphQL, JSON, and CSS with per-filetype overrides.
 
+Oxfmt is a fast formatter alternative with close coverage of the repo's Prettier defaults, native Tailwind class sorting, and optional import sorting.
+
+Oxlint is a fast JS/TS lint alternative with strong coverage of the repo's correctness, dead-code, and complexity rules. It is intentionally documented as a partial alternative rather than a drop-in ESLint replacement: JS/TS coverage is strong, but Vue-specific parity is still limited.
+
 ## Usage
 
 Copy the relevant config files into your project root (or symlink them). Each config is self-contained — just install the corresponding linter/tool and you're good to go.
+
+### OXC usage
+
+- `oxlint -c oxlint/oxlintrc.json . --deny-warnings`
+- `oxlint -c oxlint/typescript/oxlintrc.json . --deny-warnings`
+- `oxfmt -c oxfmt/.oxfmtrc.json .`
+- `oxfmt -c oxfmt/.oxfmtrc.json --check .`
+
+The TypeScript oxlint config is meant for type-aware projects. Install `oxlint-tsgolint`, and if your project uses a non-standard TypeScript config path, pass `--tsconfig <path>` when you run oxlint.
 
 ## Philosophy
 
