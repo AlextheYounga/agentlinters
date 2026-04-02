@@ -1,5 +1,5 @@
 {
-    "$schema": "../../node_modules/oxlint/configuration_schema.json",
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
     "categories": {
         "correctness": "off",
         "suspicious": "off",
@@ -13,7 +13,7 @@
     "options": {
         "typeAware": true
     },
-    "ignorePatterns": ["../../vendor", "../../node_modules", "../../dist", "../../build", "../../coverage", "../../*.min.js", "../../*.d.ts"],
+    "ignorePatterns": ["vendor", "node_modules", "dist", "build", "coverage", "*.min.js", "*.d.ts"],
     "rules": {
         "typescript/no-floating-promises": "error",
         "typescript/no-misused-promises": [

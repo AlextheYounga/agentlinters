@@ -7,12 +7,12 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | Language / Tool | Type | Config |
 |-----------------|------|--------|
 | **Prettier** | Formatter | `prettier/.prettierrc`, `prettier/.prettierignore` |
-| **Oxfmt** | Formatter | `oxfmt/.oxfmtrc.json` |
+| **Oxfmt** | Formatter | `.oxfmtrc.json` |
 | JavaScript | Linter | `javascript/js/eslint.config.js` |
 | TypeScript | Linter | `javascript/typescript/eslint.config.js` |
 | Vue | Linter | `javascript/vue/eslint.config.js` |
-| **Oxlint** | Linter | `oxlint/oxlintrc.json` |
-| **Oxlint (TypeScript)** | Linter | `oxlint/typescript/oxlintrc.json` |
+| **Oxlint** | Linter | `.oxlintrc.json` |
+| **Oxlint (TypeScript)** | Linter | `oxlint-typescript.json` |
 | Python | Linter + Formatter | `python/ruff.toml` |
 | Ruby | Linter | `ruby/rubocop.yml` |
 | Rust | Linter | `rust/clippy.toml`, `rust/Cargo.toml` |
@@ -23,20 +23,20 @@ Prettier handles formatting for JS, TS, Vue, React (JSX/TSX), HTML, Markdown, YA
 
 Oxfmt is a fast formatter alternative with close coverage of the repo's Prettier defaults, native Tailwind class sorting, and optional import sorting.
 
-The Oxfmt config also carries over the repo's ignore behavior, so it is intended to be used from the `oxfmt/.oxfmtrc.json` path shown above rather than flattened into the project root.
+The Oxfmt config also carries over the repo's ignore behavior and now lives at the standard root-level `.oxfmtrc.json` path for better editor and CLI autodiscovery.
 
 Oxlint is a fast JS/TS lint alternative with strong coverage of the repo's correctness, dead-code, and complexity rules. It is intentionally documented as a partial alternative rather than a drop-in ESLint replacement: JS/TS coverage is strong, but Vue-specific parity is still limited.
 
 ## Usage
 
-Copy the relevant config directories into your project using the paths shown above, or symlink them from this repo. Each config is self-contained when used at the documented path.
+Copy the relevant config files into your project using the paths shown above, or symlink them from this repo. Each config is self-contained when used at the documented path.
 
 ### OXC usage
 
-- `oxlint -c oxlint/oxlintrc.json . --deny-warnings`
-- `oxlint -c oxlint/typescript/oxlintrc.json . --deny-warnings`
-- `oxfmt -c oxfmt/.oxfmtrc.json .`
-- `oxfmt -c oxfmt/.oxfmtrc.json --check .`
+- `oxlint . --deny-warnings`
+- `oxlint -c oxlint-typescript.json . --deny-warnings`
+- `oxfmt .`
+- `oxfmt --check .`
 
 The TypeScript oxlint config is meant for type-aware projects. Install `oxlint-tsgolint`, and if your project uses a non-standard TypeScript config path, pass `--tsconfig <path>` when you run oxlint.
 
