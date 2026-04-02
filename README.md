@@ -16,13 +16,15 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | GraphQL | — | Prettier | `prettier/.prettierrc` |
 | Python | Ruff | Ruff | `python/ruff.toml` |
 | Ruby | RuboCop | RuboCop | `ruby/rubocop.yml` |
-| Rust | Clippy | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml` |
-| PHP | PHPStan | Pint | `php/phpstan.neon`, `php/pint.json` |
+| Rust | Clippy + Dylint | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml`, `rust/dylint/suspicious_fallback` |
+| PHP | PHPStan + Larastan | Pint | `php/phpstan.neon`, `php/pint.json` |
 | Shell | ShellCheck | shfmt | `shell/.shellcheckrc`, `shell/.editorconfig` |
 
 ## Usage
 
 Copy the relevant config files into your project root (or symlink them). Each config is self-contained — just install the corresponding linter/tool and you're good to go.
+
+Each top-level config directory also includes a local `README.md` with install and run commands.
 
 ## Philosophy
 
