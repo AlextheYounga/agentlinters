@@ -6,8 +6,14 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 
 | Language | Linter | Formatter | Configs |
 |----------|--------|-----------|---------|
-| JS / TS / Vue | ESLint | Prettier | `javascript/*/eslint.config.js`, `prettier/.prettierrc` |
-| HTML / Markdown / YAML / GraphQL | — | Prettier | `prettier/.prettierrc` |
+| JavaScript | ESLint | Prettier | `javascript/js/eslint.config.js`, `prettier/.prettierrc` |
+| TypeScript | ESLint | Prettier | `javascript/typescript/eslint.config.js`, `prettier/.prettierrc` |
+| React | ESLint | Prettier | `javascript/react/eslint.config.js`, `prettier/.prettierrc` |
+| Vue | ESLint | Prettier | `javascript/vue/eslint.config.js`, `prettier/.prettierrc` |
+| HTML | — | Prettier | `prettier/.prettierrc` |
+| Markdown | — | Prettier | `prettier/.prettierrc` |
+| YAML | — | Prettier | `prettier/.prettierrc` |
+| GraphQL | — | Prettier | `prettier/.prettierrc` |
 | Python | Ruff | Ruff | `python/ruff.toml` |
 | Ruby | RuboCop | RuboCop | `ruby/rubocop.yml` |
 | Rust | Clippy | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml` |
