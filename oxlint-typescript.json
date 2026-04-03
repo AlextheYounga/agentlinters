@@ -1,0 +1,94 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "categories": {
+        "correctness": "off",
+        "suspicious": "off",
+        "pedantic": "off",
+        "perf": "off",
+        "restriction": "off",
+        "style": "off",
+        "nursery": "off"
+    },
+    "plugins": ["typescript", "import"],
+    "options": {
+        "typeAware": true
+    },
+    "ignorePatterns": ["vendor", "node_modules", "dist", "build", "coverage", "*.min.js", "*.d.ts"],
+    "rules": {
+        "typescript/no-floating-promises": "error",
+        "typescript/no-misused-promises": [
+            "error",
+            { "checksVoidReturn": { "attributes": false } }
+        ],
+        "typescript/await-thenable": "error",
+        "typescript/require-await": "error",
+        "typescript/switch-exhaustiveness-check": "error",
+        "typescript/no-unnecessary-condition": "warn",
+        "typescript/no-unnecessary-type-assertion": "error",
+        "typescript/no-redundant-type-constituents": "warn",
+        "typescript/prefer-nullish-coalescing": "warn",
+        "typescript/prefer-optional-chain": "error",
+        "typescript/consistent-type-imports": [
+            "error",
+            {
+                "prefer": "type-imports",
+                "fixStyle": "separate-type-imports"
+            }
+        ],
+        "typescript/consistent-type-exports": [
+            "error",
+            {
+                "fixMixedExportsWithInlineTypeSpecifier": true
+            }
+        ],
+        "typescript/no-useless-empty-export": "error",
+        "typescript/no-import-type-side-effects": "error",
+        "typescript/dot-notation": "error",
+        "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_",
+                "destructuredArrayIgnorePattern": "^_",
+                "caughtErrors": "none"
+            }
+        ],
+        "no-unused-expressions": [
+            "error",
+            {
+                "allowShortCircuit": true,
+                "allowTernary": true
+            }
+        ],
+        "no-useless-constructor": "error",
+        "no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
+        "curly": ["error", "all"],
+        "eqeqeq": ["error", "always"],
+        "no-var": "error",
+        "prefer-const": ["error", { "destructuring": "all" }],
+        "prefer-template": "error",
+        "arrow-body-style": ["error", "as-needed"],
+        "no-else-return": ["error", { "allowElseIf": false }],
+        "no-lonely-if": "error",
+        "no-nested-ternary": "error",
+        "no-unneeded-ternary": "error",
+        "no-param-reassign": ["error", { "props": false }],
+        "prefer-object-spread": "error",
+        "complexity": ["warn", 12],
+        "max-depth": ["warn", 4],
+        "max-nested-callbacks": ["warn", 3],
+        "max-params": ["warn", 4],
+        "max-lines-per-function": [
+            "warn",
+            {
+                "max": 60,
+                "skipBlankLines": true,
+                "skipComments": true
+            }
+        ],
+        "import/first": "error",
+        "import/no-duplicates": "error",
+        "import/no-mutable-exports": "error",
+        "import/no-self-import": "error"
+    }
+}
