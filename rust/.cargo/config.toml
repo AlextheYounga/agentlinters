@@ -1,0 +1,2 @@
+[alias]
+dylint-all = "dylint --lib suspicious_fallback --path rust/dylint/suspicious_fallback"

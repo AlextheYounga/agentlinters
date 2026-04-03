@@ -4,11 +4,13 @@ version = "0.1.0"
 edition = "2024"
 publish = false
 
+[workspace]
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-clippy_utils = "0.1.96"
+clippy_utils = { git = "https://github.com/rust-lang/rust-clippy", rev = "20ce69b9a63bcd2756cd906fe0964d1e901e042a" }
 dylint_linting = "5.0.0"
 
 [features]
