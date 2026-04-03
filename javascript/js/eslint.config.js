@@ -106,7 +106,8 @@ export default [
             // -- stylistic (survive prettier) --
             '@stylistic/padding-line-between-statements': ['error', ...paddingAroundControl],
             '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
-            'agentlinters/no-unnecessary-fallback': 'warn',
+            'agentlinters/no-provably-unnecessary-fallback': 'warn',
+            'agentlinters/no-suspicious-fallback': 'warn',
         },
     },
 

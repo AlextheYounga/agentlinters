@@ -4,7 +4,9 @@ This directory contains ESLint flat configs for JavaScript, TypeScript, React, a
 
 It also includes a local custom plugin:
 
-- `javascript/plugins/agentlinters-eslint-plugin.js` (`agentlinters/no-unnecessary-fallback`)
+- `javascript/plugins/agentlinters-eslint-plugin.js`
+  - `agentlinters/no-suspicious-fallback`
+  - `agentlinters/no-provably-unnecessary-fallback`
 
 ## JavaScript (`javascript/js/eslint.config.js`)
 
@@ -65,6 +67,9 @@ npx eslint . --config javascript/vue/eslint.config.js
 ## Suppress intentional cases
 
 ```js
-// eslint-disable-next-line agentlinters/no-unnecessary-fallback
+// eslint-disable-next-line agentlinters/no-provably-unnecessary-fallback
 const value = 'stable' ?? 'fallback';
+
+// eslint-disable-next-line agentlinters/no-suspicious-fallback
+const valueFromFallback = await fetchPrimary().catch(() => fetchBackup());
 ```
