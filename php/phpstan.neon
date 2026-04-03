@@ -76,7 +76,7 @@ parameters:
 
 includes:
     # Laravel framework awareness (Eloquent properties/scopes/builders, facades, request helpers)
-    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/larastan/larastan/extension.neon
 
     # Strict rules: no dynamic properties, no variable variables, boolean conditions
     # Matches: Python BLE (blind except), TS strict checks, Rust suspicious=deny

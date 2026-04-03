@@ -9,7 +9,7 @@ From your PHP project root:
 ```bash
 composer require --dev \
   phpstan/phpstan \
-  nunomaduro/larastan \
+  larastan/larastan \
   rector/rector \
   phpstan/phpstan-strict-rules \
   tomasvotruba/cognitive-complexity \
