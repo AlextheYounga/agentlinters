@@ -78,6 +78,9 @@ includes:
     # Laravel framework awareness (Eloquent properties/scopes/builders, facades, request helpers)
     - vendor/larastan/larastan/extension.neon
 
+    # Optional custom fallback rule package from this repo:
+    # - vendor/agentlinters/phpstan-fallback-rules/extension.neon
+
     # Strict rules: no dynamic properties, no variable variables, boolean conditions
     # Matches: Python BLE (blind except), TS strict checks, Rust suspicious=deny
     - vendor/phpstan/phpstan-strict-rules/rules.neon

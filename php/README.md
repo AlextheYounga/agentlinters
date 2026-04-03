@@ -2,6 +2,10 @@
 
 This directory provides a strict PHPStan analyzer config and a Pint formatter config.
 
+It also includes an optional custom PHPStan rule package:
+
+- `php/custom-rules` (`fallback.unnecessaryCoalesce`)
+
 ## Install
 
 From your PHP project root:
@@ -24,6 +28,11 @@ Copy these files into your project root:
 
 - `php/phpstan.neon` -> `phpstan.neon`
 - `php/pint.json` -> `pint.json`
+
+Optional (custom fallback rule package):
+
+- copy `php/custom-rules` into your project (for example under `tools/agentlinters/php/custom-rules`)
+- follow `php/custom-rules/README.md` to require it as a path package
 
 The `phpstan.neon` in this repo is normalized for modern PHPStan and extension key names
 (`cognitive_complexity`, `type_coverage`).

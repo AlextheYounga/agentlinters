@@ -1,0 +1,22 @@
+{
+    "name": "agentlinters/phpstan-fallback-rules",
+    "description": "Custom PHPStan rules for unnecessary fallback detection",
+    "type": "phpstan-extension",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "AgentLinters\\PHPStanFallback\\": "src/"
+        }
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    }
+}
