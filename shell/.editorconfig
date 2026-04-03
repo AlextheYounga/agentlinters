@@ -1,0 +1,13 @@
+# shfmt configuration
+# shfmt reads indent style/size from .editorconfig
+# Run: shfmt -w -l .
+
+[*.sh]
+indent_style = tab
+indent_size = 4
+shell_variant = bash
+binary_next_line = true
+switch_case_indent = true
+space_redirects = true
+keep_padding = false
+end_of_line = lf

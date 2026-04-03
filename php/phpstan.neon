@@ -1,41 +1,32 @@
 parameters:
     level: 8
-    paths:
-        - app
-        - src
     excludePaths:
         - vendor
         - node_modules
         - storage
         - bootstrap/cache
+        # If you keep starter-kit scaffolding untouched, you can exclude it:
+        # - app/Actions/Fortify/*
+        # - app/Http/Requests/Settings/*
 
     # ── Type safety ──────────────────────────────────────────────────
     # Matches: TS no-floating-promises, no-unsafe-*, Rust correctness=deny
-    checkMissingIterableValueType: true
-    checkGenericClassInNonGenericObjectType: false
-    reportUnmatchedIgnoredErrors: true
+    reportUnmatchedIgnoredErrors: false
 
     # ── Cognitive complexity ─────────────────────────────────────────
     # Matches: Python C90 max-complexity=8, Rust cognitive_complexity, JS complexity
     # Requires: tomasvotruba/cognitive-complexity
-    cognitiveComplexity:
-        maxClassCognitiveComplexity: 30
-        maxFunctionCognitiveComplexity: 8
-
-    # ── Function / method size ───────────────────────────────────────
-    # Matches: JS max-lines-per-function=60, Rust too-many-lines-threshold=60, Python max-statements=40
-    # Requires: tomasvotruba/lines
-    lines:
-        maxMethodLines: 60
-        maxClassLines: 300
+    cognitive_complexity:
+        class: 30
+        function: 8
 
     # ── Type coverage ────────────────────────────────────────────────
     # Matches: TS strict type checking, Rust missing_*_doc=deny, Python D (docstrings)
     # Requires: tomasvotruba/type-coverage
     type_coverage:
-        return_type: 100
-        param_type: 100
-        property_type: 100
+        return: 100
+        param: 100
+        property: 100
 
     # ── Debug leftovers ──────────────────────────────────────────────
     # Matches: Rust dbg_macro=deny/todo=deny, Python T20 (print detection)
@@ -79,24 +70,20 @@ parameters:
             paths:
                 - tests/*
         -
-            identifier: 'lines.tooLongMethod'
-            paths:
-                - tests/*
-        -
             identifier: 'cognitive_complexity.method'
             paths:
                 - tests/*
 
 includes:
+    # Laravel framework awareness (Eloquent properties/scopes/builders, facades, request helpers)
+    - vendor/larastan/larastan/extension.neon
+
     # Strict rules: no dynamic properties, no variable variables, boolean conditions
     # Matches: Python BLE (blind except), TS strict checks, Rust suspicious=deny
     - vendor/phpstan/phpstan-strict-rules/rules.neon
 
     # Cognitive complexity analysis
     - vendor/tomasvotruba/cognitive-complexity/config/extension.neon
-
-    # Method / class length limits
-    - vendor/tomasvotruba/lines/config/extension.neon
 
     # Type coverage enforcement
     - vendor/tomasvotruba/type-coverage/config/extension.neon

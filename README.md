@@ -4,22 +4,21 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 
 ## Configs
 
-| Language / Tool | Type | Config |
-|-----------------|------|--------|
-| **Prettier** | Formatter | `prettier/.prettierrc`, `prettier/.prettierignore` |
-| **Oxfmt** | Formatter | `.oxfmtrc.json` |
-| JavaScript | Linter | `javascript/js/eslint.config.js` |
-| TypeScript | Linter | `javascript/typescript/eslint.config.js` |
-| Vue | Linter | `javascript/vue/eslint.config.js` |
-| **Oxlint** | Linter | `.oxlintrc.json` |
-| **Oxlint (TypeScript)** | Linter | `oxlint-typescript.json` |
-| Python | Linter + Formatter | `python/ruff.toml` |
-| Ruby | Linter | `ruby/rubocop.yml` |
-| Rust | Linter | `rust/clippy.toml`, `rust/Cargo.toml` |
-| PHP | Formatter + Analyzer | `php/pint.json`, `php/phpstan.neon` |
-| Shell | Linter | `shell/.shellcheckrc` |
-
-Prettier handles formatting for JS, TS, Vue, React (JSX/TSX), HTML, Markdown, YAML, GraphQL, JSON, and CSS with per-filetype overrides.
+| Language | Linter | Formatter | Configs |
+|----------|--------|-----------|---------|
+| JavaScript | ESLint | Prettier | `javascript/js/eslint.config.js`, `prettier/.prettierrc` |
+| TypeScript | ESLint | Prettier | `javascript/typescript/eslint.config.js`, `prettier/.prettierrc` |
+| React | ESLint | Prettier | `javascript/react/eslint.config.js`, `prettier/.prettierrc` |
+| Vue | ESLint | Prettier | `javascript/vue/eslint.config.js`, `prettier/.prettierrc` |
+| HTML | — | Prettier | `prettier/.prettierrc` |
+| Markdown | — | Prettier | `prettier/.prettierrc` |
+| YAML | — | Prettier | `prettier/.prettierrc` |
+| GraphQL | — | Prettier | `prettier/.prettierrc` |
+| Python | Ruff | Ruff | `python/ruff.toml` |
+| Ruby | RuboCop | RuboCop | `ruby/rubocop.yml` |
+| Rust | Clippy + Dylint | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml`, `rust/dylint/suspicious_fallback` |
+| PHP | PHPStan + Larastan | Pint | `php/phpstan.neon`, `php/pint.json` |
+| Shell | ShellCheck | shfmt | `shell/.shellcheckrc`, `shell/.editorconfig` |
 
 Oxfmt is a fast formatter alternative with close coverage of the repo's Prettier defaults, native Tailwind class sorting, and optional import sorting.
 
@@ -39,6 +38,8 @@ Copy the relevant config files into your project using the paths shown above, or
 - `oxfmt --check .`
 
 The TypeScript oxlint config is meant for type-aware projects. Install `oxlint-tsgolint`, and if your project uses a non-standard TypeScript config path, pass `--tsconfig <path>` when you run oxlint.
+
+Each top-level config directory also includes a local `README.md` with install and run commands.
 
 ## Philosophy
 

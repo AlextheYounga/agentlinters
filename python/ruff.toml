@@ -80,3 +80,11 @@ quote-style = "double"
 "__init__.py" = ["F401", "D104"]
 "conftest.py" = ["D100", "D103"]
 "scripts/**/*.py" = ["T20"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 80
