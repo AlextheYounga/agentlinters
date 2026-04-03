@@ -6,18 +6,18 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 
 | Language | Linter | Formatter | Configs |
 |----------|--------|-----------|---------|
-| JavaScript | ESLint | Prettier | `javascript/js/eslint.config.js`, `prettier/.prettierrc` |
-| TypeScript | ESLint | Prettier | `javascript/typescript/eslint.config.js`, `prettier/.prettierrc` |
-| React | ESLint | Prettier | `javascript/react/eslint.config.js`, `prettier/.prettierrc` |
-| Vue | ESLint | Prettier | `javascript/vue/eslint.config.js`, `prettier/.prettierrc` |
-| HTML | — | Prettier | `prettier/.prettierrc` |
-| Markdown | — | Prettier | `prettier/.prettierrc` |
-| YAML | — | Prettier | `prettier/.prettierrc` |
-| GraphQL | — | Prettier | `prettier/.prettierrc` |
-| Python | Ruff | Ruff | `python/ruff.toml` |
+| JavaScript | ESLint | Prettier/Oxlint | `javascript/js/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
+| TypeScript | ESLint | Prettier/Oxlint | `javascript/typescript/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
+| React | ESLint | Prettier/Oxlint | `javascript/react/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
+| Vue | ESLint | Prettier/Oxlint | `javascript/vue/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
+| HTML | — | Prettier/Oxlint | `prettier/.prettierrc` |
+| Markdown | — | Prettier/Oxlint | `prettier/.prettierrc` |
+| YAML | — | Prettier/Oxlint | `prettier/.prettierrc` |
+| GraphQL | — | Prettier/Oxlint | `prettier/.prettierrc` |
+| Python | Ruff + fallback checker | Ruff | `python/ruff.toml`, `python/fallback_checker.py` |
 | Ruby | RuboCop | RuboCop | `ruby/rubocop.yml` |
 | Rust | Clippy + Dylint | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml`, `rust/dylint/suspicious_fallback` |
-| PHP | PHPStan + Larastan | Pint | `php/phpstan.neon`, `php/pint.json` |
+| PHP | PHPStan + Larastan (+ optional custom rule) | Pint | `php/phpstan.neon`, `php/pint.json`, `php/custom-rules` |
 | Shell | ShellCheck | shfmt | `shell/.shellcheckrc`, `shell/.editorconfig` |
 
 Oxfmt is a fast formatter alternative with close coverage of the repo's Prettier defaults, native Tailwind class sorting, and optional import sorting.
