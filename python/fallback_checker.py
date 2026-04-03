@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""High-confidence fallback checker for Python.
+"""Fallback checker for Python.
 
-Detects fallback expressions where the left side is provably truthy:
-- `<truthy_literal> or <fallback>`
+Rules:
+- UFB001: provably unnecessary fallback (`<truthy_literal> or <fallback>`)
+- SFB001: suspicious fallback (`except` branch returns success)
 """
 
 from __future__ import annotations
@@ -11,9 +12,12 @@ import ast
 import sys
 from pathlib import Path
 
-RULE_ID = "UFB001"
-RULE_MSG = "unnecessary fallback: left side of `or` is always truthy"
-IGNORE_TOKEN = "fallbacklint: ignore[unnecessary-fallback]"
+UNNECESSARY_RULE_ID = "UFB001"
+UNNECESSARY_RULE_MSG = "provably unnecessary fallback: left side of `or` is always truthy"
+SUSPICIOUS_RULE_ID = "SFB001"
+SUSPICIOUS_RULE_MSG = "suspicious fallback: `except` branch returns success"
+IGNORE_UNNECESSARY_TOKEN = "fallbacklint: ignore[provably-unnecessary-fallback]"
+IGNORE_SUSPICIOUS_TOKEN = "fallbacklint: ignore[suspicious-fallback]"
 
 
 def is_definitely_truthy(node: ast.AST) -> bool:
@@ -29,11 +33,39 @@ def is_definitely_truthy(node: ast.AST) -> bool:
     return False
 
 
-def is_ignored(lines: list[str], lineno: int) -> bool:
+def is_ignored(lines: list[str], lineno: int, token: str) -> bool:
     if lineno < 1 or lineno > len(lines):
         return False
 
-    return IGNORE_TOKEN in lines[lineno - 1]
+    return token in lines[lineno - 1]
+
+
+def iter_stmt_nodes(statements: list[ast.stmt]) -> list[ast.AST]:
+    stack: list[ast.AST] = list(statements)
+    result: list[ast.AST] = []
+
+    while stack:
+        current = stack.pop()
+        result.append(current)
+
+        for child in ast.iter_child_nodes(current):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)):
+                continue
+            stack.append(child)
+
+    return result
+
+
+def find_returns(statements: list[ast.stmt]) -> list[ast.Return]:
+    returns: list[ast.Return] = []
+    for node in iter_stmt_nodes(statements):
+        if isinstance(node, ast.Return):
+            returns.append(node)
+    return returns
+
+
+def has_raise(statements: list[ast.stmt]) -> bool:
+    return any(isinstance(node, ast.Raise) for node in iter_stmt_nodes(statements))
 
 
 class FallbackVisitor(ast.NodeVisitor):
@@ -45,8 +77,26 @@ class FallbackVisitor(ast.NodeVisitor):
     def visit_BoolOp(self, node: ast.BoolOp) -> None:  # noqa: N802
         if isinstance(node.op, ast.Or) and len(node.values) >= 2:
             left = node.values[0]
-            if is_definitely_truthy(left) and not is_ignored(self.lines, node.lineno):
-                self.issues.append((node.lineno, node.col_offset + 1, f"{RULE_ID} {RULE_MSG}"))
+            if is_definitely_truthy(left) and not is_ignored(self.lines, node.lineno, IGNORE_UNNECESSARY_TOKEN):
+                self.issues.append((node.lineno, node.col_offset + 1, f"{UNNECESSARY_RULE_ID} {UNNECESSARY_RULE_MSG}"))
+
+        self.generic_visit(node)
+
+    def visit_Try(self, node: ast.Try) -> None:  # noqa: N802
+        if find_returns(node.body):
+            for handler in node.handlers:
+                if has_raise(handler.body):
+                    continue
+
+                for return_stmt in find_returns(handler.body):
+                    if not is_ignored(self.lines, return_stmt.lineno, IGNORE_SUSPICIOUS_TOKEN):
+                        self.issues.append(
+                            (
+                                return_stmt.lineno,
+                                return_stmt.col_offset + 1,
+                                f"{SUSPICIOUS_RULE_ID} {SUSPICIOUS_RULE_MSG}",
+                            )
+                        )
 
         self.generic_visit(node)
 
