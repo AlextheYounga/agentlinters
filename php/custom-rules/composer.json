@@ -1,6 +1,6 @@
 {
     "name": "agentlinters/phpstan-fallback-rules",
-    "description": "Custom PHPStan rules for unnecessary fallback detection",
+    "description": "Custom PHPStan rules for suspicious and unnecessary fallback detection",
     "type": "phpstan-extension",
     "license": "MIT",
     "require": {

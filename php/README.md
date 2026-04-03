@@ -4,7 +4,9 @@ This directory provides a strict PHPStan analyzer config and a Pint formatter co
 
 It also includes an optional custom PHPStan rule package:
 
-- `php/custom-rules` (`fallback.unnecessaryCoalesce`)
+- `php/custom-rules`
+  - `fallback.unnecessaryCoalesce` (`provably unnecessary fallback`)
+  - `fallback.suspiciousCatchRecovery` (`suspicious fallback`)
 
 ## Install
 

@@ -3,3 +3,7 @@ services:
         class: AgentLinters\PHPStanFallback\Rule\UnnecessaryFallbackRule
         tags:
             - phpstan.rules.rule
+    -
+        class: AgentLinters\PHPStanFallback\Rule\SuspiciousFallbackRule
+        tags:
+            - phpstan.rules.rule

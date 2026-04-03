@@ -2,7 +2,8 @@
 
 This package contains a high-confidence custom PHPStan rule:
 
-- `fallback.unnecessaryCoalesce` - warns when `A ?? B` is used and `A` is provably never `null`.
+- `fallback.unnecessaryCoalesce` - warns when `A ?? B` is used and `A` is provably never `null`
+- `fallback.suspiciousCatchRecovery` - warns when a `catch` branch returns a success value
 
 ## Install in your PHP project
 
@@ -32,4 +33,11 @@ Use PHPStan's standard inline ignore:
 ```php
 // @phpstan-ignore fallback.unnecessaryCoalesce
 $value = 'stable' ?? 'fallback';
+
+// @phpstan-ignore fallback.suspiciousCatchRecovery
+try {
+    return $primary();
+} catch (\Throwable $e) {
+    return $backup();
+}
 ```
