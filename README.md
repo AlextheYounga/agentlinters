@@ -17,7 +17,7 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | Python | Ruff | Ruff | `python/ruff.toml` |
 | Ruby | RuboCop | RuboCop | `ruby/rubocop.yml` |
 | Rust | Clippy + Dylint | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml`, `rust/dylint/suspicious_fallback` |
-| PHP | PHPStan + Larastan + Rector | Pint | `php/phpstan.neon`, `php/rector.php`, `php/pint.json` |
+| PHP | PHPStan + Larastan | Pint | `php/phpstan.neon`, `php/pint.json` |
 | Shell | ShellCheck | shfmt | `shell/.shellcheckrc`, `shell/.editorconfig` |
 
 ## Usage
