@@ -2,6 +2,10 @@
 
 This directory contains ESLint flat configs for JavaScript, TypeScript, React, and Vue projects.
 
+It also includes a local custom plugin:
+
+- `javascript/plugins/agentlinters-eslint-plugin.js` (`agentlinters/no-unnecessary-fallback`)
+
 ## JavaScript (`javascript/js/eslint.config.js`)
 
 Install:
@@ -56,4 +60,11 @@ Run:
 
 ```bash
 npx eslint . --config javascript/vue/eslint.config.js
+```
+
+## Suppress intentional cases
+
+```js
+// eslint-disable-next-line agentlinters/no-unnecessary-fallback
+const value = 'stable' ?? 'fallback';
 ```
