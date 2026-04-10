@@ -63,8 +63,7 @@ install_javascript() {
     copy_file "$SCRIPT_DIR/prettier/.prettierignore"                                 ".prettierignore"
 
     echo
-    info "Run the following to install npm dependencies:"
-    echo "  npm install -D eslint @eslint/js globals eslint-plugin-import @stylistic/eslint-plugin eslint-config-prettier prettier prettier-plugin-tailwindcss"
+    bash "$SCRIPT_DIR/javascript/js/setup.sh"
 }
 
 install_typescript() {
@@ -76,8 +75,7 @@ install_typescript() {
     copy_file "$SCRIPT_DIR/prettier/.prettierignore"                                 ".prettierignore"
 
     echo
-    info "Run the following to install npm dependencies:"
-    echo "  npm install -D eslint typescript typescript-eslint eslint-plugin-import eslint-import-resolver-typescript @stylistic/eslint-plugin eslint-config-prettier prettier prettier-plugin-tailwindcss"
+    bash "$SCRIPT_DIR/javascript/typescript/setup.sh"
 }
 
 install_react() {
@@ -89,8 +87,7 @@ install_react() {
     copy_file "$SCRIPT_DIR/prettier/.prettierignore"                                 ".prettierignore"
 
     echo
-    info "Run the following to install npm dependencies:"
-    echo "  npm install -D eslint typescript typescript-eslint eslint-plugin-import eslint-import-resolver-typescript @stylistic/eslint-plugin eslint-config-prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-refresh prettier prettier-plugin-tailwindcss"
+    bash "$SCRIPT_DIR/javascript/react/setup.sh"
 }
 
 install_vue() {
@@ -102,8 +99,7 @@ install_vue() {
     copy_file "$SCRIPT_DIR/prettier/.prettierignore"                                 ".prettierignore"
 
     echo
-    info "Run the following to install npm dependencies:"
-    echo "  npm install -D eslint typescript eslint-plugin-vue @vue/eslint-config-typescript eslint-plugin-import eslint-import-resolver-typescript @stylistic/eslint-plugin eslint-config-prettier prettier prettier-plugin-tailwindcss"
+    bash "$SCRIPT_DIR/javascript/vue/setup.sh"
 }
 
 install_python() {
@@ -114,8 +110,7 @@ install_python() {
     copy_file "$SCRIPT_DIR/python/fallback_checker.py" "fallback_checker.py"
 
     echo
-    info "Run the following to install Python dependencies:"
-    echo "  python -m pip install ruff"
+    bash "$SCRIPT_DIR/python/setup.sh"
 }
 
 install_ruby() {
@@ -125,12 +120,7 @@ install_ruby() {
     copy_file "$SCRIPT_DIR/ruby/rubocop.yml" ".rubocop.yml"
 
     echo
-    info "Add the following gems to your Gemfile (development group), then run 'bundle install':"
-    echo "  gem 'rubocop', require: false"
-    echo "  gem 'rubocop-performance', require: false"
-    echo "  gem 'rubocop-rake', require: false"
-    echo "  gem 'rubocop-rspec', require: false"
-    echo "  gem 'rubocop-sequel', require: false"
+    bash "$SCRIPT_DIR/ruby/setup.sh"
 }
 
 install_rust() {
@@ -145,13 +135,7 @@ install_rust() {
     echo
     warn "Merge the [lints] section from rust/Cargo.toml into your own Cargo.toml manually."
     echo
-    info "Install Rust components:"
-    echo "  rustup component add clippy rustfmt"
-    echo
-    info "Optional — Dylint custom lints:"
-    echo "  cargo install cargo-dylint dylint-link"
-    echo "  rustup toolchain install nightly-2025-09-18"
-    echo "  rustup component add --toolchain nightly-2025-09-18 rustc-dev llvm-tools-preview"
+    bash "$SCRIPT_DIR/rust/setup.sh"
 }
 
 install_php() {
@@ -162,17 +146,8 @@ install_php() {
     copy_file "$SCRIPT_DIR/php/pint.json"    "pint.json"
 
     echo
-    info "Run the following to install Composer dependencies:"
-    echo "  composer require --dev \\"
-    echo "    phpstan/phpstan \\"
-    echo "    larastan/larastan \\"
-    echo "    phpstan/phpstan-strict-rules \\"
-    echo "    tomasvotruba/cognitive-complexity \\"
-    echo "    tomasvotruba/type-coverage \\"
-    echo "    spaze/phpstan-disallowed-calls \\"
-    echo "    phpstan/phpstan-deprecation-rules \\"
-    echo "    laravel/pint"
-    echo
+    bash "$SCRIPT_DIR/php/setup.sh"
+
     warn "Optional: copy php/custom-rules into your project for the custom fallback PHPStan rules."
     warn "See php/custom-rules/README.md for path-repository setup instructions."
 }
@@ -184,12 +159,7 @@ install_shell() {
     copy_file "$SCRIPT_DIR/shell/.editorconfig" ".editorconfig"
 
     echo
-    info "Install ShellCheck and shfmt via your package manager:"
-    echo "  # Ubuntu/Debian"
-    echo "  sudo apt-get update && sudo apt-get install -y shellcheck shfmt"
-    echo
-    echo "  # macOS"
-    echo "  brew install shellcheck shfmt"
+    bash "$SCRIPT_DIR/shell/setup.sh"
 }
 
 # ---------------------------------------------------------------------------
