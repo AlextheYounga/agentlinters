@@ -87,6 +87,7 @@ export default [
             'max-nested-callbacks': ['warn', 3],
             'max-params': ['warn', 4],
             'max-lines-per-function': ['warn', { max: 60, skipBlankLines: true, skipComments: true }],
+			'max-lines': ['error', { max: 400, skipBlankLines: true, skipComments: true }],
 
             // -- imports --
             'import/order': [
