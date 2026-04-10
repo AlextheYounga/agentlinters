@@ -1,5 +1,5 @@
 [package]
-name = "suspicious_fallback"
+name = "custom_lints"
 version = "0.1.0"
 edition = "2024"
 publish = false
