@@ -1,3 +1,8 @@
+//! Implementation of the [`PROVABLY_UNNECESSARY_FALLBACK`](crate::PROVABLY_UNNECESSARY_FALLBACK) lint.
+//!
+//! Detects method calls such as `unwrap_or`, `or`, and `map_or` where the receiver is
+//! visibly constructed as `Some(..)` or `Ok(..)`, making the fallback argument dead code.
+
 use clippy_utils::diagnostics::span_lint;
 use rustc_hir::{Expr, ExprKind};
 use rustc_lint::{LateContext, LateLintPass};

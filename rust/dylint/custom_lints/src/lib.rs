@@ -1,3 +1,21 @@
+//! # custom_lints
+//!
+//! A [Dylint](https://github.com/trailofbits/dylint) library that provides custom lints
+//! complementing the baseline Clippy configuration.
+//!
+//! ## Lints
+//!
+//! | Lint | Default level | Summary |
+//! |------|---------------|---------|
+//! | [`SUSPICIOUS_FALLBACK`] | `warn` | `Err`/`None` arm in a `match` visibly recovers to `Ok(..)`/`Some(..)` |
+//! | [`PROVABLY_UNNECESSARY_FALLBACK`] | `warn` | Fallback call on a receiver that is visibly `Ok(..)`/`Some(..)` |
+//!
+//! ## Usage
+//!
+//! ```bash
+//! cargo +nightly-2025-09-18 dylint --lib custom_lints --path rust/dylint/custom_lints
+//! ```
+
 #![feature(rustc_private)]
 #![warn(unused_extern_crates)]
 

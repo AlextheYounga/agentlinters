@@ -1,3 +1,5 @@
+//! Shared utilities used by multiple lints in this crate.
+
 use rustc_hir::{Expr, ExprKind, QPath};
 use rustc_lint::LateContext;
 use rustc_middle::ty;

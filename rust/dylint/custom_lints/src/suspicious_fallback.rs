@@ -1,3 +1,9 @@
+//! Implementation of the [`SUSPICIOUS_FALLBACK`](crate::SUSPICIOUS_FALLBACK) lint.
+//!
+//! Detects `match` expressions on `Result`/`Option` where a failure arm (`Err`/`None`)
+//! visibly recovers to a success variant (`Ok(..)`/`Some(..)`), suggesting the fallback
+//! may be hiding unintended silent error recovery.
+
 use clippy_utils::diagnostics::span_lint;
 use rustc_hir::{Expr, ExprKind, Pat, PatExpr, PatExprKind, PatKind};
 use rustc_lint::{LateContext, LateLintPass};
