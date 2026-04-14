@@ -10,7 +10,7 @@
 #   typescript    TypeScript (ESLint + Prettier)
 #   react         React + TypeScript (ESLint + Prettier)
 #   vue           Vue 3 + TypeScript (ESLint + Prettier)
-#   python        Python (Ruff + fallback checker)
+#   python        Python (Ruff + Pylint + fallback checker)
 #   ruby          Ruby (RuboCop)
 #   rust          Rust (Clippy + rustfmt + Dylint)
 #   php           PHP (PHPStan + Pint)
@@ -103,11 +103,13 @@ install_vue() {
 }
 
 install_python() {
-    info "Installing Python (Ruff + fallback checker) linters"
+    info "Installing Python (Ruff + Pylint + fallback checker) linters"
     require_cmd python3
 
-    copy_file "$SCRIPT_DIR/python/ruff.toml"           "ruff.toml"
-    copy_file "$SCRIPT_DIR/python/fallback_checker.py" "fallback_checker.py"
+    copy_file "$SCRIPT_DIR/python/ruff.toml"                        "ruff.toml"
+    copy_file "$SCRIPT_DIR/python/.pylintrc"                        ".pylintrc"
+    copy_file "$SCRIPT_DIR/python/agentlinters_pylint_plugin.py"    "agentlinters_pylint_plugin.py"
+    copy_file "$SCRIPT_DIR/python/fallback_checker.py"              "fallback_checker.py"
 
     echo
     bash "$SCRIPT_DIR/python/setup.sh"
@@ -174,7 +176,7 @@ print_menu() {
     echo "  2) TypeScript   (ESLint + Prettier)"
     echo "  3) React        (ESLint + Prettier)"
     echo "  4) Vue          (ESLint + Prettier)"
-    echo "  5) Python       (Ruff + fallback checker)"
+    echo "  5) Python       (Ruff + Pylint + fallback checker)"
     echo "  6) Ruby         (RuboCop)"
     echo "  7) Rust         (Clippy + rustfmt + Dylint)"
     echo "  8) PHP          (PHPStan + Pint)"
