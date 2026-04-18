@@ -61,9 +61,6 @@ force-single-line = false
 known-first-party = []
 combine-as-imports = true
 
-[lint.flake8-quotes]
-quote-style = "double"
-
 [lint.per-file-ignores]
 "tests/**/*.py" = [
   "S101",   # allow assert in tests
