@@ -1,0 +1,38 @@
+node_modules
+dist
+build
+vendor
+target
+public
+.git
+.vscode
+*cache*
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+composer.lock
+Cargo.lock
+
+# Environment
+.env
+.env*
+
+# Binary / data
+*.sqlite
+*.db
+*.wasm
+*.min.js
+*.min.css
+
+# Language-specific (handled by their own formatters)
+*.rs
+*.py
+*.rb
+*.php
+
+# Build artifacts
+src-tauri
+bootstrap/ssr
+Dockerfile

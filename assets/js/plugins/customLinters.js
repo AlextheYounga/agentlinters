@@ -221,7 +221,7 @@ const SUSPICIOUS_FALLBACK_RULE = {
 
 export default {
     meta: {
-        name: 'agentlinters',
+        name: 'customLinters',
     },
     rules: {
         'no-provably-unnecessary-fallback': PROVABLY_UNNECESSARY_FALLBACK_RULE,

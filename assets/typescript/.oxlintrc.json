@@ -1,0 +1,86 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "categories": {
+        "correctness": "off",
+        "suspicious": "off",
+        "pedantic": "off",
+        "perf": "off",
+        "restriction": "off",
+        "style": "off",
+        "nursery": "off"
+    },
+    "plugins": ["import"],
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "ignorePatterns": ["vendor", "node_modules", "dist", "build", "coverage", "*.min.js"],
+    "rules": {
+        "eqeqeq": ["error", "always"],
+        "no-var": "error",
+        "prefer-const": ["error", { "destructuring": "all" }],
+        "no-param-reassign": ["error", { "props": false }],
+        "no-throw-literal": "error",
+        "no-self-compare": "error",
+        "no-template-curly-in-string": "warn",
+        "no-unmodified-loop-condition": "error",
+        "no-unreachable-loop": "error",
+        "no-constant-binary-expression": "error",
+        "no-constructor-return": "error",
+        "no-promise-executor-return": "error",
+        "no-new-wrappers": "error",
+        "no-array-constructor": "error",
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_",
+                "destructuredArrayIgnorePattern": "^_",
+                "caughtErrors": "none"
+            }
+        ],
+        "no-unused-expressions": [
+            "error",
+            {
+                "allowShortCircuit": true,
+                "allowTernary": true
+            }
+        ],
+        "no-lone-blocks": "error",
+        "no-useless-return": "error",
+        "no-useless-rename": "error",
+        "no-useless-computed-key": "error",
+        "no-useless-concat": "error",
+        "no-useless-constructor": "error",
+        "no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
+        "curly": ["error", "all"],
+        "prefer-template": "error",
+        "prefer-rest-params": "error",
+        "prefer-spread": "error",
+        "arrow-body-style": ["error", "as-needed"],
+        "dot-notation": "error",
+        "grouped-accessor-pairs": ["error", "getBeforeSet"],
+        "no-else-return": ["error", { "allowElseIf": false }],
+        "no-lonely-if": "error",
+        "no-multi-assign": "error",
+        "no-nested-ternary": "error",
+        "no-return-await": "error",
+        "no-unneeded-ternary": "error",
+        "prefer-object-spread": "error",
+        "complexity": ["warn", 12],
+        "max-depth": ["warn", 4],
+        "max-nested-callbacks": ["warn", 3],
+        "max-params": ["warn", 4],
+        "max-lines-per-function": [
+            "warn",
+            {
+                "max": 60,
+                "skipBlankLines": true,
+                "skipComments": true
+            }
+        ],
+        "import/first": "error",
+        "import/no-duplicates": "error",
+        "import/no-mutable-exports": "error",
+        "import/no-self-import": "error"
+    }
+}
