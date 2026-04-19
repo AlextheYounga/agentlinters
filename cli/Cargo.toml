@@ -1,0 +1,14 @@
+[package]
+name = "agentlinters"
+version = "0.1.0"
+edition = "2024"
+authors=["Alex Younger <thealexyounger@proton.me>"]
+description="CLI for installing agentlinters"
+repository="https://github.com/AlextheYounga/agentlinters"
+license="MIT"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4.6.1", features = ["derive"] }
+dialoguer = "0.12.0"
+rust-embed = "8.11.0"
