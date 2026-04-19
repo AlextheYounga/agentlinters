@@ -5,6 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "click>=8.3.2",
     "inquirer>=3.4.1",
     "pyinstaller>=6.19.0",
 ]
+
+[project.scripts]
+agentlinters = "main:cli"

@@ -1,0 +1,4 @@
+Please read README. 
+I am moving to a CLI-based approach. You can check the structure of my project in the previous commit and see what I've done here. I was previously using a bash script to drop files into a repo, but this could not be done well globally. What we need is a CLI that embeds our linters in the binary, and so we can drop these files into our cwd. Help me plan this out. 
+
+I have already set up the bones for a Python CLI which uses PyInstaller and Inquirer. The idea would be that you run the CLI, and it prompts you to select multiple from a list of different architectures. Once you've made your selection
