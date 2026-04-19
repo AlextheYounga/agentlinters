@@ -3,7 +3,7 @@ import prettier from 'eslint-config-prettier/flat';
 import importPlugin from 'eslint-plugin-import';
 import pluginJs from '@eslint/js';
 import globals from 'globals';
-import customLintersPlugin from './plugins/customLinters.js';
+import customLintersPlugin from './.dev/eslint/customLinters.js';
 
 // ── Control-flow padding ────────────────────────────────────────────
 const controlStatements = ['if', 'return', 'for', 'while', 'do', 'switch', 'try', 'throw'];

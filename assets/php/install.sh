@@ -20,4 +20,14 @@ composer require --dev \
   phpstan/phpstan-deprecation-rules \
   laravel/pint
 
+# Add .dev folder to .gitignore if it exists
+if [ -d ".dev" ] && [ -f ".gitignore" ]; then
+  if ! grep -q "^.dev$" .gitignore 2>/dev/null; then
+	echo ".dev" >> .gitignore
+	success "Added .dev to .gitignore."
+  else
+	success ".dev is already in .gitignore."
+  fi
+fi
+
 success "PHP linter dependencies installed."

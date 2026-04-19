@@ -1,10 +1,12 @@
 block_cipher = None
 
+from PyInstaller.utils.hooks import copy_metadata
+
 a = Analysis(
     ["main.py"],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[("../assets", "assets"), *copy_metadata("readchar")],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
