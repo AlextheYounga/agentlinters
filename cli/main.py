@@ -26,6 +26,13 @@ def assets_root() -> Path:
     return Path(__file__).resolve().parent.parent / "assets"
 
 
+def scripts_root() -> Path:
+    if hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / "scripts"
+
+    return Path(__file__).resolve().parent / "scripts"
+
+
 def parse_env_list(env_list: str) -> list[str]:
     return [item.strip() for item in env_list.split(",") if item.strip()]
 
@@ -74,26 +81,31 @@ def copy_environment_assets(environment: str, destination: Path) -> None:
             destination_path.mkdir(parents=True, exist_ok=True)
             continue
 
+        if relative_path == Path("install.sh"):
+            continue
+
         destination_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_path, destination_path)
 
 
-def run_install_script(destination: Path) -> None:
-    install_script = destination / "install.sh"
+def run_install_script(environment: str, destination: Path) -> None:
+    install_script = scripts_root() / f"install.{environment}.sh"
     if not install_script.exists():
-        raise click.ClickException("Missing install.sh in copied assets.")
+        raise click.ClickException(
+            f"Missing bundled install script for '{environment}'."
+        )
 
     result = subprocess.run(["bash", str(install_script)], cwd=destination, check=False)
     if result.returncode != 0:
         raise click.ClickException(
-            f"install.sh failed with exit code {result.returncode}."
+            f"{install_script.name} failed with exit code {result.returncode}."
         )
 
 
 def install_environment(environment: str, destination: Path) -> None:
     click.echo(f"Installing lints for '{environment}'...")
     copy_environment_assets(environment, destination)
-    run_install_script(destination)
+    run_install_script(environment, destination)
     click.echo(f"Installed '{environment}'.")
 
 

@@ -6,7 +6,7 @@ a = Analysis(
     ["main.py"],
     pathex=[],
     binaries=[],
-    datas=[("../assets", "assets"), *copy_metadata("readchar")],
+    datas=[("../assets", "assets"), ("scripts", "scripts"), *copy_metadata("readchar")],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
