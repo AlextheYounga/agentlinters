@@ -16,7 +16,7 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | GraphQL | — | Prettier | `prettier/.prettierrc` |
 | Python | Ruff + fallback checker | Ruff | `python/ruff.toml`, `python/fallback_checker.py` |
 | Ruby | RuboCop | RuboCop | `ruby/rubocop.yml` |
-| Rust | Clippy + Dylint | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml`, `rust/dylint/suspicious_fallback` |
+| Rust | Clippy + Dylint | rustfmt | `rust/Cargo.toml`, `rust/clippy.toml`, `rust/rustfmt.toml`, `rust/.dylint/custom_lints` |
 | PHP | PHPStan + Larastan (+ optional custom rule) | Pint | `php/phpstan.neon`, `php/pint.json`, `php/custom-rules` |
 | Shell | ShellCheck | shfmt | `shell/.shellcheckrc`, `shell/.editorconfig` |
 

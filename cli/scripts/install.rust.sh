@@ -29,3 +29,13 @@ else
 
     success "Dylint tooling installed."
 fi
+
+# Add .dylint folder to .gitignore if it exists
+if [ -d ".dylint" ] && [ -f ".gitignore" ]; then
+    if ! grep -q "^\.dylint$" .gitignore 2>/dev/null; then
+        echo ".dylint" >> .gitignore
+        success "Added .dylint to .gitignore."
+    else
+        success ".dylint is already in .gitignore."
+    fi
+fi

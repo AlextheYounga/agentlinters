@@ -10,7 +10,7 @@ Install Rust components:
 rustup component add clippy rustfmt
 ```
 
-Install Dylint tools (optional, for custom lint in `rust/dylint`):
+Install Dylint tools (optional, for custom lint in `.dylint`):
 
 ```bash
 cargo install cargo-dylint dylint-link
@@ -27,7 +27,7 @@ Copy these files into your Rust project root:
 - `rust/rustfmt.toml` -> `rustfmt.toml`
 - `rust/.cargo/config.toml` -> `.cargo/config.toml` (adds `cargo dylint-all` alias)
 
-For the custom fallback lint, also see `rust/dylint/README.md`.
+For the custom fallback lint, also see `rust/.dylint/README.md`.
 
 ## Run
 

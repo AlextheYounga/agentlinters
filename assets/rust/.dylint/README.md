@@ -4,9 +4,9 @@ This directory contains custom Dylint rules that complement the baseline Clippy 
 
 ## Included lints
 
-- `custom_lints` (`rust/dylint/custom_lints`) — warns on suspicious fallback flows
+- `custom_lints` (`.dylint/custom_lints`) — warns on suspicious fallback flows
   where a failure arm (`Err`/`None`) in a `match` visibly recovers to success (`Ok(..)`/`Some(..)`).
-- `provably_unnecessary_fallback` (`rust/dylint/custom_lints`) — warns on high-confidence
+- `provably_unnecessary_fallback` (`.dylint/custom_lints`) — warns on high-confidence
   unnecessary fallback calls where the receiver is visibly `Some(..)` or `Ok(..)`.
 
 ## Installation
@@ -36,7 +36,7 @@ Run Clippy and then this lint library:
 
 ```bash
 cargo clippy --all-targets --all-features
-cargo +nightly-2025-09-18 dylint --lib custom_lints --path rust/dylint/custom_lints
+cargo +nightly-2025-09-18 dylint --lib custom_lints --path .dylint/custom_lints
 ```
 
 Or use the Cargo alias from `rust/.cargo/config.toml`:

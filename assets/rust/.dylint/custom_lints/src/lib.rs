@@ -14,7 +14,7 @@
 //! ## Usage
 //!
 //! ```bash
-//! cargo +nightly-2025-09-18 dylint --lib custom_lints --path rust/dylint/custom_lints
+//! cargo +nightly-2025-09-18 dylint --lib custom_lints --path .dylint/custom_lints
 //! ```
 
 #![feature(rustc_private)]
