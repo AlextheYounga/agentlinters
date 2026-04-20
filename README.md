@@ -7,7 +7,7 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 | Language | Linter | Formatter | Configs |
 |----------|--------|-----------|---------|
 | JavaScript | ESLint | Prettier | `javascript/js/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
-| TypeScript | ESLint | Prettier | `javascript/typescript/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
+| TypeScript | Oxlint | Oxlint | `javascript/typescript/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
 | React | ESLint | Prettier | `javascript/react/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
 | Vue | ESLint | Prettier | `javascript/vue/eslint.config.js`, `javascript/plugins/agentlinters-eslint-plugin.js`, `prettier/.prettierrc` |
 | HTML | — | Prettier | `prettier/.prettierrc` |
