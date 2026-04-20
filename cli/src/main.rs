@@ -1,9 +1,10 @@
 use std::collections::HashSet;
 use std::fs;
+use std::io::Write;
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
-use anyhow::{anyhow, bail, Result};
+use anyhow::{Result, anyhow, bail};
 use clap::{Args, Parser, Subcommand};
 use dialoguer::MultiSelect;
 use rust_embed::Embed;
@@ -53,18 +54,11 @@ struct InstallArgs {
 }
 
 fn parse_env_list(env_list: &str) -> Vec<String> {
-    env_list
-        .split(',')
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty())
-        .collect()
+    env_list.split(',').map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect()
 }
 
 fn prompt_for_environments() -> Result<Vec<String>> {
-    let selections = MultiSelect::new()
-        .with_prompt("Select environments to install")
-        .items(ENVIRONMENTS)
-        .interact()?;
+    let selections = MultiSelect::new().with_prompt("Select environments to install").items(ENVIRONMENTS).interact()?;
 
     if selections.is_empty() {
         bail!("No environments selected.");
@@ -74,11 +68,8 @@ fn prompt_for_environments() -> Result<Vec<String>> {
 }
 
 fn validate_environments(environments: &[String]) -> Result<()> {
-    let unknown: Vec<&str> = environments
-        .iter()
-        .filter(|e| !ENVIRONMENTS.contains(&e.as_str()))
-        .map(|s| s.as_str())
-        .collect();
+    let unknown: Vec<&str> =
+        environments.iter().filter(|e| !ENVIRONMENTS.contains(&e.as_str())).map(|s| s.as_str()).collect();
 
     if !unknown.is_empty() {
         let supported = ENVIRONMENTS.join(", ");
@@ -123,24 +114,16 @@ fn copy_environment_assets(environment: &str, destination: &Path) -> Result<()> 
 
 fn run_install_script(environment: &str, destination: &Path) -> Result<()> {
     let script_name = format!("install.{environment}.sh");
-    let script = Scripts::get(&script_name)
-        .ok_or_else(|| anyhow!("Missing bundled install script for '{environment}'."))?;
+    let script =
+        Scripts::get(&script_name).ok_or_else(|| anyhow!("Missing bundled install script for '{environment}'."))?;
 
-    let temp_script = std::env::temp_dir().join(&script_name);
-    fs::write(&temp_script, script.data.as_ref())?;
+    let mut child = Command::new("bash").arg("-s").current_dir(destination).stdin(Stdio::piped()).spawn()?;
 
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        fs::set_permissions(&temp_script, fs::Permissions::from_mode(0o755))?;
-    }
+    let mut stdin = child.stdin.take().ok_or_else(|| anyhow!("Failed to open stdin for '{script_name}'."))?;
+    stdin.write_all(script.data.as_ref())?;
+    drop(stdin);
 
-    let status = Command::new("bash")
-        .arg(&temp_script)
-        .current_dir(destination)
-        .status()?;
-
-    let _ = fs::remove_file(&temp_script);
+    let status = child.wait()?;
 
     if !status.success() {
         let code = status.code().unwrap_or(-1);

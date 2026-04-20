@@ -1,8 +1,7 @@
 [MAIN]
-# Custom plugin — lives at the project root as agentlinters_pylint_plugin.py.
-# Pylint adds the project root to sys.path automatically, so no extra
-# PYTHONPATH configuration is needed.
-load-plugins=agentlinters_pylint_plugin
+# Load custom plugin package from .dev without polluting project root.
+init-hook=import sys, pathlib; sys.path.insert(0, str(pathlib.Path(".dev").resolve()))
+load-plugins=pylint_plugin
 
 # Use all available CPU cores.
 jobs=0

@@ -37,13 +37,13 @@ Copy these files into your project root:
 
 - `python/ruff.toml` → `ruff.toml`
 - `python/.pylintrc` → `.pylintrc`
-- `python/agentlinters_pylint_plugin.py` → `agentlinters_pylint_plugin.py`
+- `python/.dev/pylint_plugin/` → `.dev/pylint_plugin/`
 
-The `.pylintrc` sets `load-plugins=agentlinters_pylint_plugin`. Pylint adds the
-project root to `sys.path` automatically, so no extra `PYTHONPATH` configuration
-is needed.
+The `.pylintrc` adds `.dev` to `sys.path` through `init-hook` and sets
+`load-plugins=pylint_plugin`.
 
-Optionally, also copy `python/fallback_checker.py` if you want the standalone checker.
+Optionally, also copy `python/.dev/pylint_plugin/fallback_checker.py` if you want
+the standalone checker.
 
 ## Run
 

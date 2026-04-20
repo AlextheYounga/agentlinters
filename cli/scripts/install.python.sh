@@ -12,6 +12,12 @@ command -v python3 &>/dev/null || die "'python3' is not installed."
 # Prefer uv if available, otherwise fall back to pip
 if command -v uv &>/dev/null; then
   info "Installing Ruff and Pylint via uv"
+
+  if [ ! -d ".venv" ]; then
+	info "Creating new uv venv"
+	uv venv
+  fi
+
   uv pip install ruff pylint
 else
   info "Installing Ruff and Pylint via pip"
