@@ -12,6 +12,9 @@ persistent=yes
 # Minimum pylint version required.
 py-version=3.12
 
+# Keep files focused and reviewable.
+max-module-lines=400
+
 [MESSAGES CONTROL]
 # Disable messages that duplicate Ruff rules already enforced in ruff.toml,
 # plus a handful of messages that are too noisy for general use.

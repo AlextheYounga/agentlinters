@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# javascript/typescript/setup.sh — install TypeScript (ESLint + Prettier) npm dependencies
+# javascript/typescript/setup.sh — install TypeScript (Oxlint + Prettier) npm dependencies
 # Run from the target project root.
 set -euo pipefail
 
@@ -9,16 +9,21 @@ die()     { printf '\033[1;31mERROR:\033[0m %s\n' "$*" >&2; exit 1; }
 
 command -v npm &>/dev/null || die "'npm' is not installed. Install Node.js first."
 
-info "Installing TypeScript ESLint + Prettier npm dependencies"
+info "Installing TypeScript Oxlint + Prettier npm dependencies"
 npm install -D \
-  eslint \
+  oxlint \
   typescript \
-  typescript-eslint \
-  eslint-plugin-import \
-  eslint-import-resolver-typescript \
-  @stylistic/eslint-plugin \
-  eslint-config-prettier \
   prettier \
   prettier-plugin-tailwindcss
+
+# Add .dev folder to .gitignore if it exists
+if [ -d ".dev" ] && [ -f ".gitignore" ]; then
+  if ! grep -q "^\.dev$" .gitignore 2>/dev/null; then
+	echo ".dev" >> .gitignore
+	success "Added .dev to .gitignore."
+  else
+	success ".dev is already in .gitignore."
+  fi
+fi
 
 success "npm dependencies installed."

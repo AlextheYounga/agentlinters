@@ -22,6 +22,18 @@ Opinionated linter configs built around Clean Code principles, designed to help 
 
 ## Usage
 
+Install the CLI globally with Cargo:
+
+```bash
+cargo install --git https://github.com/AlextheYounga/agentlinters --branch main --path cli
+```
+
+Then run it from any project directory:
+
+```bash
+agentlinters
+```
+
 Copy the relevant config files into your project using the paths shown above, or symlink them from this repo. Each config is self-contained when used at the documented path.
 
 Each top-level config directory also includes a local `README.md` with install and run commands.
