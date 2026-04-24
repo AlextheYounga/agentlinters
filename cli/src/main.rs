@@ -4,22 +4,12 @@ use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
 
-use anyhow::{Result, anyhow, bail};
+use anyhow::{anyhow, bail, Result};
 use clap::{Args, Parser, Subcommand};
 use dialoguer::MultiSelect;
 use rust_embed::Embed;
 
-const ENVIRONMENTS: &[&str] = &[
-    "javascript",
-    "php",
-    "python",
-    "react",
-    "ruby",
-    "rust",
-    "shell",
-    "typescript",
-    "vue",
-];
+const ENVIRONMENTS: &[&str] = &["javascript", "php", "python", "react", "ruby", "rust", "shell", "typescript", "vue"];
 
 #[derive(Embed)]
 #[folder = "../assets"]
@@ -99,6 +89,10 @@ fn copy_environment_assets(environment: &str, destination: &Path) -> Result<()> 
         let dest_path = destination.join(relative);
         if let Some(parent) = dest_path.parent() {
             fs::create_dir_all(parent)?;
+        }
+
+        if dest_path.exists() {
+            continue;
         }
 
         let file = Assets::get(path_str).unwrap();

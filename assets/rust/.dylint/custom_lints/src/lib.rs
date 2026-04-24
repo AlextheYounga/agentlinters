@@ -119,7 +119,7 @@ rustc_session::declare_lint! {
 pub fn register_lints(sess: &rustc_session::Session, lint_store: &mut rustc_lint::LintStore) {
     dylint_linting::init_config(sess);
     lint_store.register_lints(&[FILE_TOO_LONG, PROVABLY_UNNECESSARY_FALLBACK, SUSPICIOUS_FALLBACK]);
-    lint_store.register_early_pass(|| Box::new(file_too_long::FileTooLong));
+    lint_store.register_early_pass(|| Box::new(file_too_long::FileTooLong::default()));
     lint_store.register_late_pass(|_| Box::new(unnecessary_fallback::ProvablyUnnecessaryFallback));
     lint_store.register_late_pass(|_| Box::new(suspicious_fallback::SuspiciousFallback));
 }
