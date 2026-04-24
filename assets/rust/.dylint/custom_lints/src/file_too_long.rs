@@ -22,7 +22,8 @@ impl_lint_pass!(FileTooLong => [crate::FILE_TOO_LONG]);
 impl EarlyLintPass for FileTooLong {
     fn check_item(&mut self, cx: &EarlyContext<'_>, item: &Item) {
         let sm = cx.sess().source_map();
-        let source_file = sm.lookup_char_pos(item.span.lo()).file;
+        let source_span = item.span.source_callsite();
+        let source_file = sm.lookup_char_pos(source_span.lo()).file;
 
         if !source_file.name.is_real() {
             return;
@@ -39,7 +40,7 @@ impl EarlyLintPass for FileTooLong {
                 diag.primary_message(format!(
                     "file is {line_count} lines long (limit: {MAX_LINES}); consider splitting it into smaller modules"
                 ));
-                diag.span(item.span);
+                diag.span(source_span);
             });
         }
     }

@@ -4,7 +4,7 @@ use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
 
-use anyhow::{anyhow, bail, Result};
+use anyhow::{Result, anyhow, bail};
 use clap::{Args, Parser, Subcommand};
 use dialoguer::MultiSelect;
 use rust_embed::Embed;
@@ -43,6 +43,21 @@ struct InstallArgs {
     env_list: Option<String>,
 }
 
+#[derive(Default)]
+struct CopySummary {
+    skipped_existing: Vec<String>,
+    dropped_lint_docs: Vec<String>,
+    existing_lint_docs: Vec<String>,
+}
+
+impl CopySummary {
+    fn merge(&mut self, other: Self) {
+        self.skipped_existing.extend(other.skipped_existing);
+        self.dropped_lint_docs.extend(other.dropped_lint_docs);
+        self.existing_lint_docs.extend(other.existing_lint_docs);
+    }
+}
+
 fn parse_env_list(env_list: &str) -> Vec<String> {
     env_list.split(',').map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect()
 }
@@ -70,9 +85,14 @@ fn validate_environments(environments: &[String]) -> Result<()> {
     Ok(())
 }
 
-fn copy_environment_assets(environment: &str, destination: &Path) -> Result<()> {
+fn to_relative_display(path: &Path, destination: &Path) -> String {
+    path.strip_prefix(destination).unwrap_or(path).display().to_string()
+}
+
+fn copy_environment_assets(environment: &str, destination: &Path) -> Result<CopySummary> {
     let prefix = format!("{environment}/");
     let mut found = false;
+    let mut summary = CopySummary::default();
 
     for path in Assets::iter() {
         let path_str = path.as_ref();
@@ -87,23 +107,33 @@ fn copy_environment_assets(environment: &str, destination: &Path) -> Result<()> 
         }
 
         let dest_path = destination.join(relative);
+        let display_path = to_relative_display(&dest_path, destination);
+        let is_lint_doc = relative.ends_with("-linters.md");
+
         if let Some(parent) = dest_path.parent() {
             fs::create_dir_all(parent)?;
         }
 
         if dest_path.exists() {
+            summary.skipped_existing.push(display_path.clone());
+            if is_lint_doc {
+                summary.existing_lint_docs.push(display_path);
+            }
             continue;
         }
 
         let file = Assets::get(path_str).unwrap();
         fs::write(&dest_path, file.data.as_ref())?;
+        if is_lint_doc {
+            summary.dropped_lint_docs.push(display_path);
+        }
     }
 
     if !found {
         bail!("Missing bundled assets for '{environment}'.");
     }
 
-    Ok(())
+    Ok(summary)
 }
 
 fn run_install_script(environment: &str, destination: &Path) -> Result<()> {
@@ -127,12 +157,35 @@ fn run_install_script(environment: &str, destination: &Path) -> Result<()> {
     Ok(())
 }
 
-fn install_environment(environment: &str, destination: &Path) -> Result<()> {
+fn install_environment(environment: &str, destination: &Path) -> Result<CopySummary> {
     println!("Installing lints for '{environment}'...");
-    copy_environment_assets(environment, destination)?;
+    let summary = copy_environment_assets(environment, destination)?;
     run_install_script(environment, destination)?;
     println!("Installed '{environment}'.");
-    Ok(())
+    Ok(summary)
+}
+
+fn print_install_summary(summary: &CopySummary) {
+    if !summary.skipped_existing.is_empty() {
+        println!("\nSkipped {} file(s) because they already exist:", summary.skipped_existing.len());
+        for path in &summary.skipped_existing {
+            println!("  - {path}");
+        }
+    }
+
+    if !summary.dropped_lint_docs.is_empty() {
+        println!("\nDropped lint reference markdown file(s):");
+        for path in &summary.dropped_lint_docs {
+            println!("  - {path}");
+        }
+    }
+
+    if !summary.existing_lint_docs.is_empty() {
+        println!("\nLint reference markdown already existed, kept current file(s):");
+        for path in &summary.existing_lint_docs {
+            println!("  - {path}");
+        }
+    }
 }
 
 fn install(args: InstallArgs) -> Result<()> {
@@ -152,9 +205,12 @@ fn install(args: InstallArgs) -> Result<()> {
     validate_environments(&unique)?;
 
     let destination = std::env::current_dir()?;
+    let mut summary = CopySummary::default();
     for environment in &unique {
-        install_environment(environment, &destination)?;
+        summary.merge(install_environment(environment, &destination)?);
     }
+
+    print_install_summary(&summary);
 
     Ok(())
 }
