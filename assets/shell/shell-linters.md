@@ -2,5 +2,76 @@ Source Tree:
 
 ```txt
 shell
+|-- .editorconfig
+|-- .shellcheckrc
+`-- shell-linters.md
 ```
+
+`.editorconfig`:
+
+```txt
+# shfmt configuration
+# shfmt reads indent style/size from .editorconfig
+# Run: shfmt -w -l .
+
+[*.sh]
+indent_style = tab
+indent_size = 4
+shell_variant = bash
+binary_next_line = true
+switch_case_indent = true
+space_redirects = true
+keep_padding = false
+end_of_line = lf
+```
+
+`.shellcheckrc`:
+
+```txt
+# Minimum severity: error, warning, info, style
+severity=style
+
+# Use bash as default shell dialect
+shell=bash
+
+# ── Quoting ──────────────────────────────────────────────────────────
+# Double-quote to prevent globbing and word splitting
+enable=quote-safe-variables
+# Suggest quoting to prevent word splitting in arrays
+enable=add-default-case
+
+# ── Correctness ──────────────────────────────────────────────────────
+# Require double brackets [[ ]] over single [ ]
+enable=require-double-brackets
+# Avoid masking return values (e.g., local var=$(cmd))
+enable=avoid-nullary-conditions
+# Check that printf arguments match format string
+enable=check-extra-masked-returns
+# Check for unassigned uppercase variables (likely typos)
+enable=check-unassigned-uppercase
+
+# ── Clean code ───────────────────────────────────────────────────────
+# Warn about unused variables
+enable=require-variable-braces
+
+# ── Disabled checks ──────────────────────────────────────────────────
+# SC1090: Can't follow non-constant source — common with dynamic sourcing
+disable=SC1090
+# SC1091: Not following sourced file — often not available during lint
+disable=SC1091
+# SC2034: Variable appears unused — false positives with sourced scripts
+# (enable this if your scripts are self-contained)
+# disable=SC2034
+```
+
+`shell-linters.md`:
+
+````md
+Source Tree:
+
+```txt
+shell
+```
+
+````
 

@@ -1,7 +1,7 @@
 pack() {
 	local path="$1"
 	name=$(basename "$path")
-	mdpack pack "$path" -o $path/$name-linters.md
+	mdpack pack "$path" -o $path/$name-linters.md --include-hidden
 }
 
 folders=$(find ./assets -maxdepth 1 -type d)
