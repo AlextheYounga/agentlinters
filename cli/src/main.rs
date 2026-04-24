@@ -1,8 +1,6 @@
 use std::collections::HashSet;
 use std::fs;
-use std::io::Write;
 use std::path::Path;
-use std::process::{Command, Stdio};
 
 use anyhow::{Result, anyhow, bail};
 use clap::{Args, Parser, Subcommand};
@@ -17,7 +15,7 @@ struct Assets;
 
 #[derive(Embed)]
 #[folder = "scripts"]
-struct Scripts;
+struct SetupGuides;
 
 #[derive(Parser)]
 #[command(name = "agentlinters", about = "Install agent linter configurations")]
@@ -102,9 +100,6 @@ fn copy_environment_assets(environment: &str, destination: &Path) -> Result<Copy
         found = true;
 
         let relative = &path_str[prefix.len()..];
-        if relative == "install.sh" {
-            continue;
-        }
 
         let dest_path = destination.join(relative);
         let display_path = to_relative_display(&dest_path, destination);
@@ -136,33 +131,34 @@ fn copy_environment_assets(environment: &str, destination: &Path) -> Result<Copy
     Ok(summary)
 }
 
-fn run_install_script(environment: &str, destination: &Path) -> Result<()> {
-    let script_name = format!("install.{environment}.sh");
-    let script =
-        Scripts::get(&script_name).ok_or_else(|| anyhow!("Missing bundled install script for '{environment}'."))?;
-
-    let mut child = Command::new("bash").arg("-s").current_dir(destination).stdin(Stdio::piped()).spawn()?;
-
-    let mut stdin = child.stdin.take().ok_or_else(|| anyhow!("Failed to open stdin for '{script_name}'."))?;
-    stdin.write_all(script.data.as_ref())?;
-    drop(stdin);
-
-    let status = child.wait()?;
-
-    if !status.success() {
-        let code = status.code().unwrap_or(-1);
-        bail!("{script_name} failed with exit code {code}.");
-    }
-
-    Ok(())
+fn read_setup_guide(environment: &str) -> Result<String> {
+    let guide_name = format!("install.{environment}.md");
+    let guide =
+        SetupGuides::get(&guide_name).ok_or_else(|| anyhow!("Missing bundled setup guide for '{environment}'."))?;
+    Ok(String::from_utf8_lossy(guide.data.as_ref()).into_owned())
 }
 
 fn install_environment(environment: &str, destination: &Path) -> Result<CopySummary> {
     println!("Installing lints for '{environment}'...");
     let summary = copy_environment_assets(environment, destination)?;
-    run_install_script(environment, destination)?;
     println!("Installed '{environment}'.");
     Ok(summary)
+}
+
+fn print_setup_guides(environments: &[String]) -> Result<()> {
+    if environments.is_empty() {
+        return Ok(());
+    }
+
+    println!("\nManual setup instructions (run these yourself in project root):");
+
+    for environment in environments {
+        let guide = read_setup_guide(environment)?;
+        println!("\n===== {environment} =====");
+        println!("{guide}");
+    }
+
+    Ok(())
 }
 
 fn print_install_summary(summary: &CopySummary) {
@@ -211,6 +207,7 @@ fn install(args: InstallArgs) -> Result<()> {
     }
 
     print_install_summary(&summary);
+    print_setup_guides(&unique)?;
 
     Ok(())
 }

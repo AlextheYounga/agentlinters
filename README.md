@@ -34,6 +34,8 @@ Then run it from any project directory:
 agentlinters
 ```
 
+The CLI copies lint config files only. It does not install package dependencies automatically; instead it prints environment-specific setup commands for you to run manually.
+
 Copy the relevant config files into your project using the paths shown above, or symlink them from this repo. Each config is self-contained when used at the documented path.
 
 Each top-level config directory also includes a local `README.md` with install and run commands.
