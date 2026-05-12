@@ -6,9 +6,6 @@ use anyhow::{Result, anyhow, bail};
 use clap::{Args, Parser, Subcommand};
 use dialoguer::MultiSelect;
 use rust_embed::Embed;
-use serde::Deserialize;
-
-const ENV_MANIFEST_PATH: &str = "environments.json";
 
 #[derive(Embed)]
 #[folder = "../assets"]
@@ -42,11 +39,6 @@ struct InstallArgs {
     env_list: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
-struct EnvironmentEntry {
-    id: String,
-}
-
 #[derive(Default)]
 struct CopySummary {
     root_installed: Vec<String>,
@@ -73,27 +65,30 @@ fn parse_env_list(env_list: &str) -> Vec<String> {
 }
 
 fn load_environments() -> Result<Vec<String>> {
-    let raw = Assets::get(ENV_MANIFEST_PATH)
-        .ok_or_else(|| anyhow!("Missing bundled environments manifest at '{ENV_MANIFEST_PATH}'."))?;
-    let parsed: Vec<EnvironmentEntry> = serde_json::from_slice(raw.data.as_ref())?;
-
-    if parsed.is_empty() {
-        bail!("Bundled environments manifest is empty.");
-    }
-
     let mut seen = HashSet::new();
     let mut environments = Vec::new();
 
-    for entry in parsed {
-        let normalized = entry.id.trim().to_string();
+    for path in Assets::iter() {
+        let path_str = path.as_ref();
+        let Some((first_segment, _)) = path_str.split_once('/') else {
+            continue;
+        };
+
+        let normalized = first_segment.trim();
         if normalized.is_empty() {
-            bail!("Bundled environments manifest contains an empty environment id.");
+            bail!("Bundled assets contain an empty environment folder name.");
         }
-        if !seen.insert(normalized.clone()) {
-            bail!("Bundled environments manifest contains duplicate id '{normalized}'.");
+
+        if seen.insert(normalized.to_string()) {
+            environments.push(normalized.to_string());
         }
-        environments.push(normalized);
     }
+
+    if environments.is_empty() {
+        bail!("No environments found in bundled assets.");
+    }
+
+    environments.sort();
 
     Ok(environments)
 }
@@ -109,11 +104,8 @@ fn prompt_for_environments(environments: &[String]) -> Result<Vec<String>> {
 }
 
 fn validate_environments(environments: &[String], supported: &[String]) -> Result<()> {
-    let unknown: Vec<&str> = environments
-        .iter()
-        .filter(|e| !supported.iter().any(|s| s == *e))
-        .map(|s| s.as_str())
-        .collect();
+    let unknown: Vec<&str> =
+        environments.iter().filter(|e| !supported.iter().any(|s| s == *e)).map(|s| s.as_str()).collect();
 
     if !unknown.is_empty() {
         let supported = supported.join(", ");
@@ -288,11 +280,8 @@ fn install(args: InstallArgs) -> Result<()> {
     validate_environments(&unique, &supported)?;
 
     let destination = std::env::current_dir()?;
-    let install_mode = if unique.len() > 1 {
-        InstallMode::MultipleEnvironments
-    } else {
-        InstallMode::SingleEnvironment
-    };
+    let install_mode =
+        if unique.len() > 1 { InstallMode::MultipleEnvironments } else { InstallMode::SingleEnvironment };
 
     let mut summary = CopySummary::default();
     for environment in &unique {
@@ -338,12 +327,7 @@ mod tests {
     #[test]
     fn resolves_single_environment_redirect_to_flat_linters_folder() {
         let destination = Path::new("/tmp/project");
-        let resolved = resolve_redirect_path(
-            destination,
-            "react",
-            "eslint.config.js",
-            InstallMode::SingleEnvironment,
-        );
+        let resolved = resolve_redirect_path(destination, "react", "eslint.config.js", InstallMode::SingleEnvironment);
 
         assert_eq!(resolved, Path::new("/tmp/project/.linters/eslint.config.js"));
     }
@@ -351,12 +335,8 @@ mod tests {
     #[test]
     fn resolves_multi_environment_redirect_to_namespaced_folder() {
         let destination = Path::new("/tmp/project");
-        let resolved = resolve_redirect_path(
-            destination,
-            "react",
-            "eslint.config.js",
-            InstallMode::MultipleEnvironments,
-        );
+        let resolved =
+            resolve_redirect_path(destination, "react", "eslint.config.js", InstallMode::MultipleEnvironments);
 
         assert_eq!(resolved, Path::new("/tmp/project/.linters/react/eslint.config.js"));
     }
