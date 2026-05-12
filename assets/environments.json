@@ -1,0 +1,11 @@
+[
+  { "id": "javascript" },
+  { "id": "php" },
+  { "id": "python" },
+  { "id": "react" },
+  { "id": "ruby" },
+  { "id": "rust" },
+  { "id": "shell" },
+  { "id": "typescript" },
+  { "id": "vue" }
+]

@@ -1,13 +1,14 @@
 use std::collections::HashSet;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow, bail};
 use clap::{Args, Parser, Subcommand};
 use dialoguer::MultiSelect;
 use rust_embed::Embed;
+use serde::Deserialize;
 
-const ENVIRONMENTS: &[&str] = &["javascript", "php", "python", "react", "ruby", "rust", "shell", "typescript", "vue"];
+const ENV_MANIFEST_PATH: &str = "environments.json";
 
 #[derive(Embed)]
 #[folder = "../assets"]
@@ -41,41 +42,81 @@ struct InstallArgs {
     env_list: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+struct EnvironmentEntry {
+    id: String,
+}
+
 #[derive(Default)]
 struct CopySummary {
-    skipped_existing: Vec<String>,
-    dropped_lint_docs: Vec<String>,
-    existing_lint_docs: Vec<String>,
+    root_installed: Vec<String>,
+    redirected_to_linters: Vec<String>,
+    skipped_identical: Vec<String>,
 }
 
 impl CopySummary {
     fn merge(&mut self, other: Self) {
-        self.skipped_existing.extend(other.skipped_existing);
-        self.dropped_lint_docs.extend(other.dropped_lint_docs);
-        self.existing_lint_docs.extend(other.existing_lint_docs);
+        self.root_installed.extend(other.root_installed);
+        self.redirected_to_linters.extend(other.redirected_to_linters);
+        self.skipped_identical.extend(other.skipped_identical);
     }
+}
+
+#[derive(Clone, Copy)]
+enum InstallMode {
+    SingleEnvironment,
+    MultipleEnvironments,
 }
 
 fn parse_env_list(env_list: &str) -> Vec<String> {
     env_list.split(',').map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect()
 }
 
-fn prompt_for_environments() -> Result<Vec<String>> {
-    let selections = MultiSelect::new().with_prompt("Select environments to install").items(ENVIRONMENTS).interact()?;
+fn load_environments() -> Result<Vec<String>> {
+    let raw = Assets::get(ENV_MANIFEST_PATH)
+        .ok_or_else(|| anyhow!("Missing bundled environments manifest at '{ENV_MANIFEST_PATH}'."))?;
+    let parsed: Vec<EnvironmentEntry> = serde_json::from_slice(raw.data.as_ref())?;
+
+    if parsed.is_empty() {
+        bail!("Bundled environments manifest is empty.");
+    }
+
+    let mut seen = HashSet::new();
+    let mut environments = Vec::new();
+
+    for entry in parsed {
+        let normalized = entry.id.trim().to_string();
+        if normalized.is_empty() {
+            bail!("Bundled environments manifest contains an empty environment id.");
+        }
+        if !seen.insert(normalized.clone()) {
+            bail!("Bundled environments manifest contains duplicate id '{normalized}'.");
+        }
+        environments.push(normalized);
+    }
+
+    Ok(environments)
+}
+
+fn prompt_for_environments(environments: &[String]) -> Result<Vec<String>> {
+    let selections = MultiSelect::new().with_prompt("Select environments to install").items(environments).interact()?;
 
     if selections.is_empty() {
         bail!("No environments selected.");
     }
 
-    Ok(selections.iter().map(|&i| ENVIRONMENTS[i].to_string()).collect())
+    Ok(selections.iter().map(|&i| environments[i].clone()).collect())
 }
 
-fn validate_environments(environments: &[String]) -> Result<()> {
-    let unknown: Vec<&str> =
-        environments.iter().filter(|e| !ENVIRONMENTS.contains(&e.as_str())).map(|s| s.as_str()).collect();
+fn validate_environments(environments: &[String], supported: &[String]) -> Result<()> {
+    let unknown: Vec<&str> = environments
+        .iter()
+        .filter(|e| !supported.iter().any(|s| s == *e))
+        .map(|s| s.as_str())
+        .collect();
 
     if !unknown.is_empty() {
-        let supported = ENVIRONMENTS.join(", ");
+        let supported = supported.join(", ");
         let invalid = unknown.join(", ");
         bail!("Unknown environment(s): {invalid}. Supported values: {supported}");
     }
@@ -87,7 +128,47 @@ fn to_relative_display(path: &Path, destination: &Path) -> String {
     path.strip_prefix(destination).unwrap_or(path).display().to_string()
 }
 
-fn copy_environment_assets(environment: &str, destination: &Path) -> Result<CopySummary> {
+fn is_markdown_linter_doc(relative_path: &str) -> bool {
+    relative_path.ends_with("-linters.md")
+}
+
+fn flatten_relative_path(relative_path: &str) -> String {
+    relative_path.replace(['/', '\\'], "__")
+}
+
+fn resolve_redirect_path(
+    destination: &Path,
+    environment: &str,
+    relative_path: &str,
+    install_mode: InstallMode,
+) -> PathBuf {
+    match install_mode {
+        InstallMode::SingleEnvironment => destination.join(".linters").join(flatten_relative_path(relative_path)),
+        InstallMode::MultipleEnvironments => destination.join(".linters").join(environment).join(relative_path),
+    }
+}
+
+fn write_if_changed(path: &Path, data: &[u8]) -> Result<bool> {
+    if let Ok(existing) = fs::read(path) {
+        if existing == data {
+            return Ok(false);
+        }
+    }
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    fs::write(path, data)?;
+    Ok(true)
+}
+
+fn copy_environment_assets(
+    environment: &str,
+    destination: &Path,
+    install_mode: InstallMode,
+    keep_markdown_docs: bool,
+) -> Result<CopySummary> {
     let prefix = format!("{environment}/");
     let mut found = false;
     let mut summary = CopySummary::default();
@@ -100,27 +181,27 @@ fn copy_environment_assets(environment: &str, destination: &Path) -> Result<Copy
         found = true;
 
         let relative = &path_str[prefix.len()..];
-
-        let dest_path = destination.join(relative);
-        let display_path = to_relative_display(&dest_path, destination);
-        let is_lint_doc = relative.ends_with("-linters.md");
-
-        if let Some(parent) = dest_path.parent() {
-            fs::create_dir_all(parent)?;
-        }
-
-        if dest_path.exists() {
-            summary.skipped_existing.push(display_path.clone());
-            if is_lint_doc {
-                summary.existing_lint_docs.push(display_path);
-            }
+        if !keep_markdown_docs && is_markdown_linter_doc(relative) {
             continue;
         }
 
         let file = Assets::get(path_str).unwrap();
-        fs::write(&dest_path, file.data.as_ref())?;
-        if is_lint_doc {
-            summary.dropped_lint_docs.push(display_path);
+        let root_dest_path = destination.join(relative);
+
+        if root_dest_path.exists() {
+            let redirect_path = resolve_redirect_path(destination, environment, relative, install_mode);
+            if write_if_changed(&redirect_path, file.data.as_ref())? {
+                summary.redirected_to_linters.push(to_relative_display(&redirect_path, destination));
+            } else {
+                summary.skipped_identical.push(to_relative_display(&redirect_path, destination));
+            }
+            continue;
+        }
+
+        if write_if_changed(&root_dest_path, file.data.as_ref())? {
+            summary.root_installed.push(to_relative_display(&root_dest_path, destination));
+        } else {
+            summary.skipped_identical.push(to_relative_display(&root_dest_path, destination));
         }
     }
 
@@ -138,9 +219,14 @@ fn read_setup_guide(environment: &str) -> Result<String> {
     Ok(String::from_utf8_lossy(guide.data.as_ref()).into_owned())
 }
 
-fn install_environment(environment: &str, destination: &Path) -> Result<CopySummary> {
+fn install_environment(
+    environment: &str,
+    destination: &Path,
+    install_mode: InstallMode,
+    keep_markdown_docs: bool,
+) -> Result<CopySummary> {
     println!("Installing lints for '{environment}'...");
-    let summary = copy_environment_assets(environment, destination)?;
+    let summary = copy_environment_assets(environment, destination, install_mode, keep_markdown_docs)?;
     println!("Installed '{environment}'.");
     Ok(summary)
 }
@@ -162,29 +248,30 @@ fn print_setup_guides(environments: &[String]) -> Result<()> {
 }
 
 fn print_install_summary(summary: &CopySummary) {
-    if !summary.skipped_existing.is_empty() {
-        println!("\nSkipped {} file(s) because they already exist:", summary.skipped_existing.len());
-        for path in &summary.skipped_existing {
+    if !summary.root_installed.is_empty() {
+        println!("\nInstalled {} file(s) to project root:", summary.root_installed.len());
+        for path in &summary.root_installed {
             println!("  - {path}");
         }
     }
 
-    if !summary.dropped_lint_docs.is_empty() {
-        println!("\nDropped lint reference markdown file(s):");
-        for path in &summary.dropped_lint_docs {
+    if !summary.redirected_to_linters.is_empty() {
+        println!("\nRedirected {} colliding file(s) to '.linters':", summary.redirected_to_linters.len());
+        for path in &summary.redirected_to_linters {
             println!("  - {path}");
         }
     }
 
-    if !summary.existing_lint_docs.is_empty() {
-        println!("\nLint reference markdown already existed, kept current file(s):");
-        for path in &summary.existing_lint_docs {
+    if !summary.skipped_identical.is_empty() {
+        println!("\nSkipped {} unchanged file(s):", summary.skipped_identical.len());
+        for path in &summary.skipped_identical {
             println!("  - {path}");
         }
     }
 }
 
 fn install(args: InstallArgs) -> Result<()> {
+    let supported = load_environments()?;
     let mut chosen = args.environments;
 
     if let Some(list) = args.env_list {
@@ -192,18 +279,24 @@ fn install(args: InstallArgs) -> Result<()> {
     }
 
     if chosen.is_empty() {
-        chosen = prompt_for_environments()?;
+        chosen = prompt_for_environments(&supported)?;
     }
 
     let mut seen = HashSet::new();
     let unique: Vec<String> = chosen.into_iter().filter(|e| seen.insert(e.clone())).collect();
 
-    validate_environments(&unique)?;
+    validate_environments(&unique, &supported)?;
 
     let destination = std::env::current_dir()?;
+    let install_mode = if unique.len() > 1 {
+        InstallMode::MultipleEnvironments
+    } else {
+        InstallMode::SingleEnvironment
+    };
+
     let mut summary = CopySummary::default();
     for environment in &unique {
-        summary.merge(install_environment(environment, &destination)?);
+        summary.merge(install_environment(environment, &destination, install_mode, false)?);
     }
 
     print_install_summary(&summary);
@@ -223,5 +316,48 @@ fn main() {
     if let Err(e) = result {
         eprintln!("Error: {e}");
         std::process::exit(1);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn flattens_relative_paths_for_single_environment_redirects() {
+        assert_eq!(flatten_relative_path(".dev/eslint/customLinters.js"), ".dev__eslint__customLinters.js");
+        assert_eq!(flatten_relative_path("eslint.config.js"), "eslint.config.js");
+    }
+
+    #[test]
+    fn skips_markdown_linter_docs() {
+        assert!(is_markdown_linter_doc("javascript-linters.md"));
+        assert!(!is_markdown_linter_doc("eslint.config.js"));
+    }
+
+    #[test]
+    fn resolves_single_environment_redirect_to_flat_linters_folder() {
+        let destination = Path::new("/tmp/project");
+        let resolved = resolve_redirect_path(
+            destination,
+            "react",
+            "eslint.config.js",
+            InstallMode::SingleEnvironment,
+        );
+
+        assert_eq!(resolved, Path::new("/tmp/project/.linters/eslint.config.js"));
+    }
+
+    #[test]
+    fn resolves_multi_environment_redirect_to_namespaced_folder() {
+        let destination = Path::new("/tmp/project");
+        let resolved = resolve_redirect_path(
+            destination,
+            "react",
+            "eslint.config.js",
+            InstallMode::MultipleEnvironments,
+        );
+
+        assert_eq!(resolved, Path::new("/tmp/project/.linters/react/eslint.config.js"));
     }
 }
