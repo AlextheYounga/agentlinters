@@ -3,8 +3,6 @@ import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescri
 import prettier from 'eslint-config-prettier/flat';
 import importPlugin from 'eslint-plugin-import';
 import vue from 'eslint-plugin-vue';
-import agentlintersPlugin from '../plugins/agentlinters-eslint-plugin.js';
-
 // ── Control-flow padding ────────────────────────────────────────────
 const controlStatements = ['if', 'return', 'for', 'while', 'do', 'switch', 'try', 'throw'];
 const paddingAroundControl = [
@@ -64,7 +62,6 @@ export default defineConfigWithVueTs(
         plugins: {
             import: importPlugin,
             '@stylistic': stylistic,
-            agentlinters: agentlintersPlugin,
         },
         settings: {
             'import/resolver': {
@@ -120,9 +117,7 @@ export default defineConfigWithVueTs(
             // -- stylistic (survive prettier) --
             '@stylistic/padding-line-between-statements': ['error', ...paddingAroundControl],
             '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
-            'agentlinters/no-provably-unnecessary-fallback': 'warn',
-            'agentlinters/no-suspicious-fallback': 'warn',
-        },
+            },
     },
 
     // ── Ignores ─────────────────────────────────────────────────────

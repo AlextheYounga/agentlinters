@@ -80,6 +80,8 @@ includes:
 
     # Optional custom fallback rule package from this repo:
     # - vendor/agentlinters/phpstan-fallback-rules/extension.neon
+    #
+    # _(moved to tests/cleancode — see install guide)_
 
     # Strict rules: no dynamic properties, no variable variables, boolean conditions
     # Matches: Python BLE (blind except), TS strict checks, Rust suspicious=deny

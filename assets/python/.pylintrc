@@ -1,7 +1,4 @@
 [MAIN]
-# Load custom plugin package from .dev without polluting project root.
-init-hook=import sys, pathlib; sys.path.insert(0, str(pathlib.Path(".dev").resolve()))
-load-plugins=pylint_plugin
 
 # Use all available CPU cores.
 jobs=0

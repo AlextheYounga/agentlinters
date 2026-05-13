@@ -5,8 +5,6 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
-import agentlintersPlugin from '../plugins/agentlinters-eslint-plugin.js';
-
 // ── Control-flow padding ────────────────────────────────────────────
 const controlStatements = ['if', 'return', 'for', 'while', 'do', 'switch', 'try', 'throw'];
 const paddingAroundControl = [
@@ -83,7 +81,6 @@ export default tseslint.config(
         plugins: {
             import: importPlugin,
             '@stylistic': stylistic,
-            agentlinters: agentlintersPlugin,
         },
         settings: {
             'import/resolver': {
@@ -160,8 +157,6 @@ export default tseslint.config(
             // -- stylistic (survive prettier) --
             '@stylistic/padding-line-between-statements': ['error', ...paddingAroundControl],
             '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
-            'agentlinters/no-provably-unnecessary-fallback': 'warn',
-            'agentlinters/no-suspicious-fallback': 'warn',
         },
     },
 

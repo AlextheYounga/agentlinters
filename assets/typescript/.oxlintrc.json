@@ -10,12 +10,6 @@
         "nursery": "off"
     },
     "plugins": ["typescript", "import"],
-    "jsPlugins": [
-        {
-            "name": "agentlinters",
-            "specifier": "./.dev/oxlint/customLinters.js"
-        }
-    ],
     "options": {
         "typeAware": true
     },
@@ -128,8 +122,6 @@
         "import/first": "error",
         "import/no-duplicates": "error",
         "import/no-mutable-exports": "error",
-        "import/no-self-import": "error",
-        "agentlinters/no-provably-unnecessary-fallback": "warn",
-        "agentlinters/no-suspicious-fallback": "warn"
+        "import/no-self-import": "error"
     }
 }

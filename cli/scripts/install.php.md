@@ -6,4 +6,14 @@ Install PHP linting and formatting dependencies:
 composer require --dev phpstan/phpstan larastan/larastan phpstan/phpstan-strict-rules tomasvotruba/cognitive-complexity tomasvotruba/type-coverage spaze/phpstan-disallowed-calls phpstan/phpstan-deprecation-rules laravel/pint
 ```
 
-If this environment created a `.dev` folder, add `.dev` to `.gitignore`.
+Install clean-code test parser dependency:
+
+```bash
+composer require --dev nikic/php-parser
+```
+
+Run clean-code tests:
+
+```bash
+vendor/bin/phpunit tests/cleancode/
+```

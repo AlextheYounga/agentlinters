@@ -3,8 +3,6 @@ import prettier from 'eslint-config-prettier/flat';
 import importPlugin from 'eslint-plugin-import';
 import pluginJs from '@eslint/js';
 import globals from 'globals';
-import customLintersPlugin from './.dev/eslint/customLinters.js';
-
 // ── Control-flow padding ────────────────────────────────────────────
 const controlStatements = ['if', 'return', 'for', 'while', 'do', 'switch', 'try', 'throw'];
 const paddingAroundControl = [
@@ -33,7 +31,6 @@ export default [
         plugins: {
             import: importPlugin,
             '@stylistic': stylistic,
-            agentlinters: customLintersPlugin,
         },
         rules: {
             // -- correctness --
@@ -107,8 +104,6 @@ export default [
             // -- stylistic (survive prettier) --
             '@stylistic/padding-line-between-statements': ['error', ...paddingAroundControl],
             '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
-            'agentlinters/no-provably-unnecessary-fallback': 'warn',
-            'agentlinters/no-suspicious-fallback': 'warn',
         },
     },
 

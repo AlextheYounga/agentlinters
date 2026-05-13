@@ -6,12 +6,14 @@ Install Rust linting and formatting components:
 rustup component add clippy rustfmt
 ```
 
-Optional: install Dylint tooling and pinned nightly toolchain for custom lints:
+Add `syn` as a dev-dependency for clean-code integration tests:
 
 ```bash
-cargo install cargo-dylint dylint-link
-rustup toolchain install nightly-2025-09-18
-rustup component add --toolchain nightly-2025-09-18 rustc-dev llvm-tools-preview
+cargo add --dev syn --features full,extra-traits,visit
 ```
 
-If this environment created a `.dylint` folder, add `.dylint` to `.gitignore`.
+Run clean-code tests:
+
+```bash
+cargo test cleancode_
+```

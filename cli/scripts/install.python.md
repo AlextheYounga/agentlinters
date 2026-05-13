@@ -13,4 +13,8 @@ Or install with `pip`:
 python3 -m pip install ruff pylint
 ```
 
-If this environment created a `.dev` folder, add `.dev` to `.gitignore`.
+Run clean-code tests:
+
+```bash
+pytest tests/cleancode/
+```
