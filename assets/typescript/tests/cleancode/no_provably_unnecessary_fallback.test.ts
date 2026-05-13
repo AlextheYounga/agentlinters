@@ -1,24 +1,24 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { readFileSync } from 'node:fs';
 import {
   collectSourceFiles,
   getRelativePath,
   isDefinitelyNonNullish,
   isDefinitelyTruthy,
   parseSource,
+  readFile,
   walkAST,
-} from './_shared.js';
+} from './_shared';
 
 const srcDirs = ['src', 'app', 'lib'];
 
 describe('no-provably-unnecessary-fallback', () => {
-  const files = collectSourceFiles(srcDirs, ['.js', '.jsx', '.ts', '.tsx']);
+  const files = collectSourceFiles(srcDirs, ['.ts', '.tsx']);
   if (files.length === 0) return;
 
   for (const file of files) {
     it(getRelativePath(file), () => {
-      const code = readFileSync(file, 'utf-8');
+      const code = readFile(file);
       let ast;
       try {
         ast = parseSource(code);
@@ -26,7 +26,7 @@ describe('no-provably-unnecessary-fallback', () => {
         return;
       }
 
-      const violations = [];
+      const violations: string[] = [];
       walkAST(ast, (node) => {
         if (node.type !== 'LogicalExpression') return;
         const src = code.slice(node.start, node.end);
@@ -38,8 +38,7 @@ describe('no-provably-unnecessary-fallback', () => {
         }
       });
 
-      assert.strictEqual(violations.length, 0,
-        `Found unnecessary fallback(s):\n${violations.join('\n')}`);
+      assert.strictEqual(violations.length, 0, `Found unnecessary fallback(s):\n${violations.join('\n')}`);
     });
   }
 });
