@@ -1,10 +1,10 @@
 use std::collections::HashSet;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use clap::Parser;
 use dialoguer::MultiSelect;
 
-use crate::args::{parse_environment_list, Cli, Commands, InstallArgs};
+use crate::args::{Cli, Commands, InstallArgs, parse_environment_list};
 use crate::assets::{load_environments, read_setup_guide};
 use crate::install::install_environment;
 use crate::summary::{CopySummary, InstallMode};
@@ -36,7 +36,8 @@ fn install(args: InstallArgs) -> Result<()> {
     validate_environments(&unique, &supported)?;
 
     let destination = std::env::current_dir()?;
-    let install_mode = if unique.len() > 1 { InstallMode::MultipleEnvironments } else { InstallMode::SingleEnvironment };
+    let install_mode =
+        if unique.len() > 1 { InstallMode::MultipleEnvironments } else { InstallMode::SingleEnvironment };
 
     let mut summary = CopySummary::default();
     for environment in &unique {

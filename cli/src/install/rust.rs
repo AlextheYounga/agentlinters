@@ -1,17 +1,23 @@
 use std::fs;
 use std::path::Path;
 
-use anyhow::{anyhow, bail, Result};
-use toml_edit::{table, DocumentMut};
+use anyhow::{Result, anyhow, bail};
+use toml_edit::{DocumentMut, table};
 
 use crate::assets::Assets;
 use crate::install::shared::copy_environment_assets_filtered;
 use crate::summary::{CopySummary, InstallMode};
 use crate::utils::{to_relative_display, write_if_changed};
 
-pub fn install_rust_assets(destination: &Path, install_mode: InstallMode, keep_markdown_docs: bool) -> Result<CopySummary> {
+pub fn install_rust_assets(
+    destination: &Path,
+    install_mode: InstallMode,
+    keep_markdown_docs: bool,
+) -> Result<CopySummary> {
     let mut summary =
-        copy_environment_assets_filtered("rust", destination, install_mode, keep_markdown_docs, |relative| relative == "Cargo.toml")?;
+        copy_environment_assets_filtered("rust", destination, install_mode, keep_markdown_docs, |relative| {
+            relative == "Cargo.toml"
+        })?;
     merge_rust_cargo_toml(destination, &mut summary)?;
     Ok(summary)
 }
@@ -71,7 +77,11 @@ mod tests {
 
     #[test]
     fn merges_bundled_rust_clippy_lints_without_dropping_existing_cargo_data() {
-        let unique = format!("agentlinters_test_{}_{}", std::process::id(), std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).expect("clock").as_nanos());
+        let unique = format!(
+            "agentlinters_test_{}_{}",
+            std::process::id(),
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).expect("clock").as_nanos()
+        );
         let temp_dir = std::env::temp_dir().join(unique);
         fs::create_dir_all(&temp_dir).expect("create temp dir");
 

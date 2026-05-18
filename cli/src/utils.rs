@@ -21,8 +21,12 @@ pub fn resolve_redirect_path(
     install_mode: crate::summary::InstallMode,
 ) -> PathBuf {
     match install_mode {
-        crate::summary::InstallMode::SingleEnvironment => destination.join(".linters").join(flatten_relative_path(relative_path)),
-        crate::summary::InstallMode::MultipleEnvironments => destination.join(".linters").join(environment).join(relative_path),
+        crate::summary::InstallMode::SingleEnvironment => {
+            destination.join(".linters").join(flatten_relative_path(relative_path))
+        }
+        crate::summary::InstallMode::MultipleEnvironments => {
+            destination.join(".linters").join(environment).join(relative_path)
+        }
     }
 }
 
@@ -60,7 +64,12 @@ mod tests {
     #[test]
     fn resolves_single_environment_redirect_to_flat_linters_folder() {
         let destination = Path::new("/tmp/project");
-        let resolved = resolve_redirect_path(destination, "react", "eslint.config.js", crate::summary::InstallMode::SingleEnvironment);
+        let resolved = resolve_redirect_path(
+            destination,
+            "react",
+            "eslint.config.js",
+            crate::summary::InstallMode::SingleEnvironment,
+        );
 
         assert_eq!(resolved, Path::new("/tmp/project/.linters/eslint.config.js"));
     }
@@ -68,7 +77,12 @@ mod tests {
     #[test]
     fn resolves_multi_environment_redirect_to_namespaced_folder() {
         let destination = Path::new("/tmp/project");
-        let resolved = resolve_redirect_path(destination, "react", "eslint.config.js", crate::summary::InstallMode::MultipleEnvironments);
+        let resolved = resolve_redirect_path(
+            destination,
+            "react",
+            "eslint.config.js",
+            crate::summary::InstallMode::MultipleEnvironments,
+        );
 
         assert_eq!(resolved, Path::new("/tmp/project/.linters/react/eslint.config.js"));
     }

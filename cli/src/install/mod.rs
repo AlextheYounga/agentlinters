@@ -4,8 +4,8 @@ mod python;
 mod react;
 mod ruby;
 mod rust;
-mod shell;
 pub(crate) mod shared;
+mod shell;
 mod typescript;
 mod vue;
 

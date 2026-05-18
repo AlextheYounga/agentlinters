@@ -41,6 +41,7 @@ pub fn load_environments() -> Result<Vec<String>> {
 
 pub fn read_setup_guide(environment: &str) -> Result<String> {
     let guide_name = format!("install.{environment}.md");
-    let guide = SetupGuides::get(&guide_name).ok_or_else(|| anyhow::anyhow!("Missing bundled setup guide for '{environment}'."))?;
+    let guide = SetupGuides::get(&guide_name)
+        .ok_or_else(|| anyhow::anyhow!("Missing bundled setup guide for '{environment}'."))?;
     Ok(String::from_utf8_lossy(guide.data.as_ref()).into_owned())
 }
