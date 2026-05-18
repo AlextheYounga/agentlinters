@@ -78,6 +78,14 @@
                 "skipComments": true
             }
         ],
+        "max-lines": [
+            "error",
+            {
+                "max": 400,
+                "skipBlankLines": true,
+                "skipComments": true
+            }
+        ],
         "import/first": "error",
         "import/no-duplicates": "error",
         "import/no-mutable-exports": "error",
