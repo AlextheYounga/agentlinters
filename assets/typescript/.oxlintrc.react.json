@@ -1,10 +1,10 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
     "extends": ["./.oxlintrc.json"],
-    "plugins": ["typescript", "import", "react", "react-hooks", "react-refresh"],
+    "plugins": ["typescript", "import", "react"],
     "rules": {
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn",
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn",
         "react/jsx-no-constructed-context-values": "error",
         "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }],
         "react/no-array-index-key": "warn",
@@ -20,6 +20,6 @@
         "react/jsx-no-leaked-render": ["error", { "validStrategies": ["ternary", "coerce"] }],
         "react/jsx-pascal-case": ["error", { "allowAllCaps": true }],
         "react/hook-use-state": "warn",
-        "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }]
+        "react/only-export-components": "warn"
     }
 }
