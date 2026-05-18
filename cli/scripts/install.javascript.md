@@ -3,7 +3,7 @@
 Install JavaScript linting and formatting dependencies:
 
 ```bash
-npm install -D eslint @eslint/js globals eslint-plugin-import @stylistic/eslint-plugin eslint-config-prettier prettier prettier-plugin-tailwindcss
+npm install -D oxlint prettier prettier-plugin-tailwindcss
 ```
 
 Install test dependencies for clean-code checks:
