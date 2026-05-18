@@ -201,7 +201,33 @@ fn copy_environment_assets(
         bail!("Missing bundled assets for '{environment}'.");
     }
 
+    if environment == "react" || environment == "vue" {
+        copy_family_shared_assets(destination, &mut summary)?;
+    }
+
     Ok(summary)
+}
+
+fn copy_family_shared_assets(destination: &Path, summary: &mut CopySummary) -> Result<()> {
+    let shared_paths = [
+        "javascript/tests/cleancode/_shared.js",
+        "javascript/tests/cleancode/_rules.js",
+    ];
+
+    for path_str in shared_paths {
+        let Some(file) = Assets::get(path_str) else {
+            bail!("Missing bundled shared asset '{path_str}'.");
+        };
+
+        let dest_path = destination.join(path_str);
+        if write_if_changed(&dest_path, file.data.as_ref())? {
+            summary.root_installed.push(to_relative_display(&dest_path, destination));
+        } else {
+            summary.skipped_identical.push(to_relative_display(&dest_path, destination));
+        }
+    }
+
+    Ok(())
 }
 
 fn read_setup_guide(environment: &str) -> Result<String> {
